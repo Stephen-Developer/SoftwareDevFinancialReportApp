@@ -12,3 +12,4 @@ C:\Users\25StephenKellyHannon\Documents\Projects\SoftwareDevFinancialReportApp\F
 C:\Users\25StephenKellyHannon\Documents\Projects\SoftwareDevFinancialReportApp\FinancialReportApp\obj\Debug\net8.0\FinancialReportApp.pdb
 C:\Users\25StephenKellyHannon\Documents\Projects\SoftwareDevFinancialReportApp\FinancialReportApp\obj\Debug\net8.0\FinancialReportApp.genruntimeconfig.cache
 C:\Users\25StephenKellyHannon\Documents\Projects\SoftwareDevFinancialReportApp\FinancialReportApp\obj\Debug\net8.0\ref\FinancialReportApp.dll
+C:\Users\25StephenKellyHannon\Documents\Projects\SoftwareDevFinancialReportApp\FinancialReportApp\obj\Debug\net8.0\FinancialReportApp.sourcelink.json

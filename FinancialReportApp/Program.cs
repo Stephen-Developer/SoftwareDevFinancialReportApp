@@ -1,4 +1,7 @@
-﻿namespace FinancialReportApp
+﻿using FinancialReportApp.Systems;
+using FinancialReportApp.UI;
+
+namespace FinancialReportApp
 {
     internal class Program
     {
@@ -43,57 +46,7 @@
 
         static void Main(string[] args)
         {
-            bool exit = false;
-
-            var menuActions = new Dictionary<int, (string label, Action action)>
-            {
-                { 1, ("Input Salary", InputSalary) },
-                { 2, ("Input Expenses", InputExpenses) },
-                { 3, ("Generate Report", GenerateReport) },
-                { 4, ("Exit", () => exit = true) }
-            };
-
-            const string menuStartText = "Please select an option:";
-            const string menuEndText = "Option: ";
-            const string menuError = "Invalid option number.";
-
-            while (!exit)
-            {
-                Console.Clear();
-                Console.WriteLine(menuStartText);
-                foreach (var kvp in menuActions)
-                {
-                    Console.WriteLine($"{kvp.Key}. {kvp.Value.label}");
-                }
-                Console.Write(menuEndText);
-
-                if (int.TryParse(Console.ReadLine(), out int number) && menuActions.ContainsKey(number))
-                {
-                    Console.Clear();
-                    menuActions[number].action.Invoke();
-                }
-                else
-                {
-                    Console.Clear();
-                    Console.WriteLine(menuError);
-                }
-                if (!exit) Console.ReadKey();
-            }
-        }
-
-        static void InputSalary()
-        {
-            Console.WriteLine("Input Salary selected.");
-        }
-
-        static void InputExpenses()
-        {
-            Console.WriteLine("Input Expenses selected.");
-        }
-
-        static void GenerateReport()
-        {
-            Console.WriteLine("Generate Report selected.");
+            UIController.Instance.Start();
         }
     }
 }
