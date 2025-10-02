@@ -25,7 +25,10 @@ namespace FinancialReportApp.UI
 
         public override void Display()
         {
-            StringBuilder report = new StringBuilder();
+            ReportGenerator.Instance.ProcessData();
+            Console.WriteLine(ReportGenerator.Instance.GenerateReport());
+            Console.ReadLine();
+            /*StringBuilder report = new StringBuilder();
 
             report.AppendLine("=====Financial Report=====");
             report.AppendLine($"Salary: {UIController.Instance.UserInputData.Salary:C}");
@@ -39,7 +42,7 @@ namespace FinancialReportApp.UI
             }
 
             Console.WriteLine(report.ToString());
-            Console.ReadLine();
+            Console.ReadLine();*/
         }
     }
 }

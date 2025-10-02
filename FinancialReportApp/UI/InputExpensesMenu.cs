@@ -60,7 +60,7 @@ namespace FinancialReportApp.UI
             for (int i = 0; i < expenses.Count; i++)
             {
                 var exp = expenses[i];
-                Console.WriteLine($"{i + 1}. {exp.Catagory} - {exp.Amount} ({exp.Frequency})");
+                Console.WriteLine($"{i + 1}. {exp.Category} - {exp.Amount} ({exp.Frequency})");
             }
             int index = InputHandler.PromtInt("Enter the number of the expense to remove: ") - 1;
             if (index >= 0 && index < expenses.Count)
@@ -86,7 +86,7 @@ namespace FinancialReportApp.UI
                 Console.WriteLine("Current Expenses:");
                 foreach (var exp in expenses)
                 {
-                    Console.WriteLine($"{exp.Catagory} - {exp.Amount} ({exp.Frequency})");
+                    Console.WriteLine($"{exp.Category} - {exp.Amount} ({exp.Frequency})");
                 }
             }
             Console.ReadLine();

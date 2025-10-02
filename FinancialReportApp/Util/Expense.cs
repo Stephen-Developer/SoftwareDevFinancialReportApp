@@ -8,17 +8,17 @@ namespace FinancialReportApp.Util
 {
     internal class Expense
     {
-        private readonly string catagory;
+        private readonly string category;
         private readonly decimal amount;
         private readonly TimeFrequency frequency;
 
-        public string Catagory { get => catagory; }
+        public string Category { get => category; }
         public decimal Amount { get => amount; }
         public TimeFrequency Frequency { get => frequency; }
 
-        public Expense(string catagory, decimal amount, TimeFrequency frequency)
+        public Expense(string category, decimal amount, TimeFrequency frequency)
         {
-            this.catagory = catagory;
+            this.category = category;
             this.amount = amount;
             this.frequency = frequency;
         }

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using FinancialReportApp.Systems;
+using FinancialReportApp.Util;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -32,6 +34,7 @@ namespace FinancialReportApp.UI
             AddMenuAction("Input Expenses", InputExpenses);
             AddMenuAction("Generate Report", GenerateReport);
             AddMenuAction("Exit", () => exit = true);
+            AddMenuAction("Debug", AddDebugValues);
         }
 
         private void InputSalary()
@@ -47,6 +50,16 @@ namespace FinancialReportApp.UI
         private void GenerateReport()
         {
             ReportUI.Instance.Display();
+        }
+
+        private void AddDebugValues()
+        {
+            UIController.Instance.UserInputData.Salary = 100000;
+            UIController.Instance.UserInputData.SalaryFrequency = TimeFrequency.Yearly;
+            UIController.Instance.UserInputData.AddExpense(new Expense("Car", 10000, TimeFrequency.OneTime));
+            UIController.Instance.UserInputData.AddExpense(new Expense("Car", 20, TimeFrequency.Weekly));
+            UIController.Instance.UserInputData.AddExpense(new Expense("Bills", 200, TimeFrequency.Monthly));
+            UIController.Instance.UserInputData.AddExpense(new Expense("Food", 60, TimeFrequency.Weekly));
         }
     }
 }

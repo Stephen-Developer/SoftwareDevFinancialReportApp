@@ -46,6 +46,7 @@ namespace FinancialReportApp
 
         static void Main(string[] args)
         {
+            UIController uIController = new UIController();
             UIController.Instance.Start();
         }
     }
