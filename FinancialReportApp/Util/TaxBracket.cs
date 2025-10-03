@@ -8,8 +8,19 @@ namespace FinancialReportApp.Util
 {
     internal class TaxBracket
     {
-        public decimal LowerBoundry { get; set; }
-        public decimal? UpperBoundry { get; set; }
-        public decimal Rate { get; set; }
+        private readonly decimal lowerBoundary;
+        private readonly decimal? upperBoundary;
+        private readonly decimal rate;
+
+        public decimal LowerBoundary { get => lowerBoundary; }
+        public decimal? UpperBoundary { get => upperBoundary; }
+        public decimal Rate { get => rate; }
+
+        public TaxBracket(decimal lowerBoundary, decimal? upperBoundary, decimal rate)
+        {
+            this.lowerBoundary = lowerBoundary;
+            this.upperBoundary = upperBoundary;
+            this.rate = rate;
+        }
     }
 }

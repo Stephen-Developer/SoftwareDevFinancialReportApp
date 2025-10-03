@@ -23,7 +23,16 @@ namespace FinancialReportApp.Util
             }
         }
 
-        public static decimal PromtDecimal(string message)
+        public static decimal? PromtNullableDecimal(string message)
+        {
+            if(string.IsNullOrWhiteSpace(message))
+            {
+                return null;
+            }
+            return PromtDecimal(message);
+        }
+
+        public static decimal PromtDecimal(string message, decimal min = decimal.MinValue, decimal max = decimal.MaxValue)
         {
             decimal result;
             while (true)

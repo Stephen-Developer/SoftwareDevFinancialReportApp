@@ -32,6 +32,7 @@ namespace FinancialReportApp.UI
         {
             AddMenuAction("Input Salary", InputSalary);
             AddMenuAction("Input Expenses", InputExpenses);
+            AddMenuAction("Input Custom Tax Brackets", InputCustomTaxBrackets);
             AddMenuAction("Generate Report", GenerateReport);
             AddMenuAction("Exit", () => exit = true);
             AddMenuAction("Debug", AddDebugValues);
@@ -52,6 +53,11 @@ namespace FinancialReportApp.UI
             ReportUI.Instance.Display();
         }
 
+        private void InputCustomTaxBrackets()
+        {
+            InputCustomTaxMenu.Instance.Display();
+        }
+
         private void AddDebugValues()
         {
             UIController.Instance.UserInputData.Salary = 100000;
@@ -60,6 +66,7 @@ namespace FinancialReportApp.UI
             UIController.Instance.UserInputData.AddExpense(new Expense("Car", 20, TimeFrequency.Weekly));
             UIController.Instance.UserInputData.AddExpense(new Expense("Bills", 200, TimeFrequency.Monthly));
             UIController.Instance.UserInputData.AddExpense(new Expense("Food", 60, TimeFrequency.Weekly));
+            UIController.Instance.UserInputData.AddExpense(new Expense("Rent", 1500, TimeFrequency.Monthly));
         }
     }
 }
