@@ -1,5 +1,5 @@
-./vs/
-.FinancialReportApp/vs/
+.vs/
+FinancialReportApp/.vs/
 
 # User-specific files
 *.suo
