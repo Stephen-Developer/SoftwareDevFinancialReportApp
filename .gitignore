@@ -1,1 +1,73 @@
-.vs/
+./vs/
+.FinancialReportApp/vs/
+
+# User-specific files
+*.suo
+*.user
+*.sln.docstates
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+build/
+[Bb]in/
+[Oo]bj/
+
+# NuGet Packages
+packages/
+*.nupkg
+*.snupkg
+*.nuspec
+.nuget/
+project.lock.json
+project.fragment.lock.json
+*.csproj.user
+
+# Visual Studio auto-generated files
+*.ncb
+*.sdf
+*.cache
+*.dbmdl
+*.opendb
+*.pdb
+*.psess
+*.vsp
+*.vsps
+*.vssscc
+
+# ReSharper
+_ReSharper*/
+*.[Rr]e[Ss]harper
+
+# Others - backup, logs, temporary
+*~
+*.bak
+*.tmp
+*.log
+
+# VS Code settings folder
+.vscode/
+
+# Rider IDE settings folder
+.idea/
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# Folder-specific ignores
+bin/
+obj/
+
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# Folder config file
+Desktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# Mac desktop service store files
+.DS_Store
