@@ -7,12 +7,12 @@ FinancialReportApp/.vs/
 *.sln.docstates
 
 # Build results
-[Dd]ebug/
+FinancialReportApp/[Dd]ebug/
 [Rr]elease/
 x64/
 build/
-[Bb]in/
-[Oo]bj/
+FinancialReportApp/[Bb]in/
+FinancialReportApp/[Oo]bj/
 
 # NuGet Packages
 packages/
