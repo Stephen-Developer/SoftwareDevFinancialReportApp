@@ -1,4 +1,5 @@
 ﻿using FinancialReportApp.Systems;
+using FinancialReportApp.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,8 @@ namespace FinancialReportApp.UI
     internal class ReportUI : UI
     {
         private static ReportUI _instance;
+
+        const string outputFileName = "FinancialReport.txt";
 
         public static ReportUI Instance
         {
@@ -26,23 +29,30 @@ namespace FinancialReportApp.UI
         public override void Display()
         {
             ReportGenerator.Instance.ProcessData();
-            Console.WriteLine(ReportGenerator.Instance.GenerateReport());
+            var report = ReportGenerator.Instance.GenerateReport();
+            Console.WriteLine(report);
             Console.ReadLine();
-            /*StringBuilder report = new StringBuilder();
 
-            report.AppendLine("=====Financial Report=====");
-            report.AppendLine($"Salary: {UIController.Instance.UserInputData.Salary:C}");
-            report.AppendLine($"Salary Type: {(UIController.Instance.UserInputData.IsSalaryBeforeTax ? "Before Tax" : "After Tax")}");
-            report.AppendLine($"Tax Paid: {UIController.Instance.UserInputData.TaxPaid:C}");
-            report.AppendLine($"Salary Frequency: {UIController.Instance.UserInputData.SalaryFrequency}");
-            report.AppendLine($"Expenses:");
-            foreach (var expense in UIController.Instance.UserInputData.Expenses)
+            Console.Clear();
+
+            var writeReport = InputHandler.PromtYesNo("Would you like to write the report to a file?");
+            if (writeReport)
             {
-                report.AppendLine($" - {expense.Catagory}: {expense.Amount:C} ({expense.Frequency})");
-            }
+                var exeDirectory = AppDomain.CurrentDomain.BaseDirectory;
+                var outputPath = Path.Combine(exeDirectory, outputFileName);
 
-            Console.WriteLine(report.ToString());
-            Console.ReadLine();*/
+                var writeSuccess= FileUtils.WriteToFile(report, outputPath);
+                if(writeSuccess)
+                {
+                    Console.WriteLine($"Report written to {outputPath}");
+                }
+                else
+                {
+                    Console.WriteLine($"Failed to write report to {outputPath}");
+                }
+
+                    Console.ReadLine();
+            }
         }
     }
 }

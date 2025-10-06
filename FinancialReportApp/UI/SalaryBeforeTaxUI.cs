@@ -31,6 +31,8 @@ namespace FinancialReportApp.UI
             UIController.Instance.UserInputData.IsSalaryBeforeTax = true;
 
             SalaryFrequencyMenu.Instance.Display();
+
+            TaxCreditMenu.Instance.Display();
         }
     }
 }

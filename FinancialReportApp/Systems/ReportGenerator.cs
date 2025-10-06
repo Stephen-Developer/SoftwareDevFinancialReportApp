@@ -36,9 +36,13 @@ namespace FinancialReportApp.Systems
             reportData.MonthlyTax = reportData.AnnualTax / 12;
             reportData.WeeklyTax = reportData.AnnualTax / 52;
 
-            reportData.NetAnnual = reportData.AnnualSalary - reportData.AnnualTax;
-            reportData.NetMonthly = reportData.MonthlySalary - reportData.MonthlyTax;
-            reportData.NetWeekly = reportData.WeeklySalary - reportData.WeeklyTax;
+            reportData.AnnualTaxCredits = TaxSystem.Instance.taxCredits.Sum();
+            reportData.MonthlyTaxCredits = reportData.AnnualTaxCredits / 12;
+            reportData.WeeklyTaxCredits = reportData.AnnualTaxCredits / 52;
+
+            reportData.NetAnnual = reportData.AnnualSalary - reportData.AnnualTax + reportData.AnnualTaxCredits;
+            reportData.NetMonthly = reportData.MonthlySalary - reportData.MonthlyTax + reportData.MonthlyTaxCredits;
+            reportData.NetWeekly = reportData.WeeklySalary - reportData.WeeklyTax + reportData.WeeklyTaxCredits;
 
             foreach (var expense in userData.Expenses)
             {
@@ -112,6 +116,7 @@ namespace FinancialReportApp.Systems
             report.AppendLine("-----Annual Summary-----");
             report.AppendLine($"Annual Salary before tax: {reportData.AnnualSalary:C}");
             report.AppendLine($"Annual tax: {reportData.AnnualTax:C}");
+            report.AppendLine($"Annual tax credits: {reportData.AnnualTaxCredits:C}");
             report.AppendLine($"Annual net: {reportData.NetAnnual:C}");
             report.AppendLine($"Total annual expense: {reportData.TotalAnnualExpense:C}");
             report.AppendLine($"Annual expenses:");
@@ -123,6 +128,7 @@ namespace FinancialReportApp.Systems
             report.AppendLine("-----Monthly Summary-----");
             report.AppendLine($"Monthly Salary before tax: {reportData.MonthlySalary:C}");
             report.AppendLine($"Monthly tax: {reportData.MonthlyTax:C}");
+            report.AppendLine($"Monthly tax credits: {reportData.MonthlyTaxCredits:C}");
             report.AppendLine($"Monthly net: {reportData.NetMonthly:C}");
             report.AppendLine($"Total monthly expense: {reportData.TotalMonthlyExpense:C}");
             report.AppendLine($"Monthly expenses:");
@@ -135,6 +141,7 @@ namespace FinancialReportApp.Systems
             report.AppendLine("-----Weekly Summary-----");
             report.AppendLine($"Weekly Salary before tax: {reportData.WeeklySalary:C}");
             report.AppendLine($"Weekly tax: {reportData.WeeklyTax:C}");
+            report.AppendLine($"Weekly tax credits: {reportData.WeeklyTaxCredits:C}");
             report.AppendLine($"Weekly net: {reportData.NetMonthly:C}");
             report.AppendLine($"Total weekly expense: {reportData.TotalWeeklyExpense:C}");
             report.AppendLine($"Weekly expenses:");
@@ -161,6 +168,10 @@ namespace FinancialReportApp.Systems
         public decimal AnnualTax { get; set; }
         public decimal MonthlyTax { get; set; }
         public decimal WeeklyTax { get; set; }
+
+        public decimal AnnualTaxCredits { get; set; }
+        public decimal MonthlyTaxCredits { get; set; }
+        public decimal WeeklyTaxCredits { get; set; }
 
         public decimal NetAnnual { get; set; }
         public decimal NetMonthly { get; set; }

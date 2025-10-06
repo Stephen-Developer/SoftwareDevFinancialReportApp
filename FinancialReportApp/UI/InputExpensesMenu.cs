@@ -42,9 +42,7 @@ namespace FinancialReportApp.UI
             decimal amount = InputHandler.PromtDecimal("Enter expense amount: ");
             TimeFrequency frequency = InputHandler.PromtEnum<TimeFrequency>("Enter expense frequency (e.g., Monthly, Weekly): ");
 
-            Expense expense = new Expense(catagory, amount, frequency);
-
-            UIController.Instance.UserInputData.AddExpense(expense);
+            UIController.Instance.UserInputData.AddExpense(catagory, amount, frequency);
         }
 
         private void RemoveExpenseItem()

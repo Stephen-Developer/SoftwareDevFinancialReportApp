@@ -33,9 +33,17 @@ namespace FinancialReportApp.Systems
 
         public List<TaxBracket> customTaxBracketList = new List<TaxBracket>();
 
+        public List<decimal> taxCredits = new List<decimal>();
+
         public TaxSystem()
         {
 
+        }
+
+        public void AddTaxBracket(decimal lowerBoundary, decimal? upperBoundary, decimal rate)
+        {
+            var taxBracket = new TaxBracket(lowerBoundary, upperBoundary, rate);
+            customTaxBracketList.Add(taxBracket);
         }
     }
 }

@@ -23,13 +23,35 @@ namespace FinancialReportApp.Util
             }
         }
 
-        public static decimal? PromtNullableDecimal(string message)
+        public static decimal? PromtNullableDecimal(string message, decimal min = decimal.MinValue, decimal max = decimal.MaxValue)
         {
-            if(string.IsNullOrWhiteSpace(message))
+            decimal result;
+            while (true)
             {
-                return null;
+                Console.Write(message);
+                string? input = Console.ReadLine();
+
+                if(string.IsNullOrEmpty(input))
+                {
+                    return null;
+                }
+
+                var isParsed = decimal.TryParse(input, out result);
+
+                if (!isParsed)
+                {
+                    Console.WriteLine("Invalid input. Please enter a valid decimal number.");
+                    continue;
+                }
+
+                if (result <= min || result >= max)
+                {
+                    Console.WriteLine($"Input must be between {min} and {max}. Please enter a valid decimal number.");
+                    continue;
+                }
+
+                return result;
             }
-            return PromtDecimal(message);
         }
 
         public static decimal PromtDecimal(string message, decimal min = decimal.MinValue, decimal max = decimal.MaxValue)
@@ -38,12 +60,22 @@ namespace FinancialReportApp.Util
             while (true)
             {
                 Console.Write(message);
-                string input = Console.ReadLine();
-                if (decimal.TryParse(input, out result))
+                string? input = Console.ReadLine();
+                var isParsed = decimal.TryParse(input, out result);
+
+                if (!isParsed)
                 {
-                    return result;
+                    Console.WriteLine("Invalid input. Please enter a valid decimal number.");
+                    continue;
                 }
-                Console.WriteLine("Invalid input. Please enter a valid decimal number.");
+
+                if(result < min || result > max)
+                {
+                    Console.WriteLine($"Input must be between {min} and {max}. Please enter a valid decimal number.");
+                    continue;
+                }
+
+                return result;
             }
         }
 
@@ -78,6 +110,24 @@ namespace FinancialReportApp.Util
                     return values[choice - 1];
                 }
                 Console.WriteLine("Invalid input. Please select a valid option.");
+            }
+        }
+
+        public static bool PromtYesNo(string message)
+        {
+            while (true)
+            {
+                Console.Write(message + " (y/n): ");
+                string input = Console.ReadLine().Trim().ToLower();
+                if (input == "y" || input == "yes")
+                {
+                    return true;
+                }
+                else if (input == "n" || input == "no")
+                {
+                    return false;
+                }
+                Console.WriteLine("Invalid input. Please enter 'y' or 'n'.");
             }
         }
     }

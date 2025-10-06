@@ -35,7 +35,8 @@ namespace FinancialReportApp.UI
             AddMenuAction("Input Custom Tax Brackets", InputCustomTaxBrackets);
             AddMenuAction("Generate Report", GenerateReport);
             AddMenuAction("Exit", () => exit = true);
-            AddMenuAction("Debug", AddDebugValues);
+            AddMenuAction("Add Debug Expenses", AddDebugValues);
+            AddMenuAction("Add Debug Tax Brackets", AddDebugTaxBrackets);
         }
 
         private void InputSalary()
@@ -62,11 +63,21 @@ namespace FinancialReportApp.UI
         {
             UIController.Instance.UserInputData.Salary = 100000;
             UIController.Instance.UserInputData.SalaryFrequency = TimeFrequency.Yearly;
-            UIController.Instance.UserInputData.AddExpense(new Expense("Car", 10000, TimeFrequency.OneTime));
-            UIController.Instance.UserInputData.AddExpense(new Expense("Car", 20, TimeFrequency.Weekly));
-            UIController.Instance.UserInputData.AddExpense(new Expense("Bills", 200, TimeFrequency.Monthly));
-            UIController.Instance.UserInputData.AddExpense(new Expense("Food", 60, TimeFrequency.Weekly));
-            UIController.Instance.UserInputData.AddExpense(new Expense("Rent", 1500, TimeFrequency.Monthly));
+            UIController.Instance.UserInputData.AddExpense("Car", 10000, TimeFrequency.OneTime);
+            UIController.Instance.UserInputData.AddExpense("Car", 20, TimeFrequency.Weekly);
+            UIController.Instance.UserInputData.AddExpense("Bills", 200, TimeFrequency.Monthly);
+            UIController.Instance.UserInputData.AddExpense("Food", 60, TimeFrequency.Weekly);
+            UIController.Instance.UserInputData.AddExpense("Rent", 1500, TimeFrequency.Monthly);
+            TaxSystem.Instance.taxCredits.Add(1000);
+            TaxSystem.Instance.taxCredits.Add(500);
+        }
+
+        private void AddDebugTaxBrackets()
+        {
+            TaxSystem.Instance.AddTaxBracket(0, 20, 0.2m);
+            TaxSystem.Instance.AddTaxBracket(21, 40, 0.3m);
+            TaxSystem.Instance.AddTaxBracket(41, 60, 0.4m);
+            TaxSystem.Instance.AddTaxBracket(61, null, 0.5m);
         }
     }
 }

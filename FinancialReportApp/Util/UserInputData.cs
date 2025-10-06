@@ -16,8 +16,9 @@ namespace FinancialReportApp.Util
         public TimeFrequency SalaryFrequency { get; set; }
         public List<Expense> Expenses { get => expenses; }
 
-        public void AddExpense(Expense expense)
+        public void AddExpense(string category, decimal amount, TimeFrequency frequency)
         {
+            var expense = new Expense(category, amount, frequency);
             expenses.Add(expense);
         }
 

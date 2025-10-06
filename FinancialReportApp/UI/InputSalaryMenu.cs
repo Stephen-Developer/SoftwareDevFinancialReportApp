@@ -29,6 +29,7 @@ namespace FinancialReportApp.UI
         {
             AddMenuAction("Input Salary Before Tax", InputSalaryBeforeTax);
             AddMenuAction("Input Salary After Tax", InputSalaryAfterTax);
+            AddMenuAction("Input Tax Credits", InputTaxCredits);
             AddMenuAction(BACK, () => exit = true);
         }
 
@@ -40,6 +41,11 @@ namespace FinancialReportApp.UI
         private void InputSalaryAfterTax()
         {
             SalaryAfterTaxUI.Instance.Display();
+        }
+
+        private void InputTaxCredits()
+        {
+            TaxCreditMenu.Instance.Display();
         }
     }
 }
