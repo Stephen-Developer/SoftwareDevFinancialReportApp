@@ -8,20 +8,11 @@ using System.Threading.Tasks;
 
 namespace FinancialReportApp.UI
 {
-    internal class SalaryBeforeTaxUI : UI
+    internal class SalaryBeforeTaxUI : UIBase
     {
-        private static SalaryBeforeTaxUI? _instance;
-
-        public static SalaryBeforeTaxUI Instance 
+        public SalaryBeforeTaxUI(IUserInterface userInterface) : base(userInterface)
         {
-            get
-            {
-                if (_instance == null)
-                {
-                    _instance = new SalaryBeforeTaxUI();
-                }
-                return _instance;
-            }
+
         }
 
         public override void Display()
@@ -30,9 +21,9 @@ namespace FinancialReportApp.UI
             UIController.Instance.UserInputData.Salary = InputHandler.PromtDecimal("Enter your salary before tax: ");
             UIController.Instance.UserInputData.IsSalaryBeforeTax = true;
 
-            SalaryFrequencyMenu.Instance.Display();
+            //SalaryFrequencyMenu.Instance.Display();
 
-            TaxCreditMenu.Instance.Display();
+            //TaxCreditMenu.Instance.Display();
         }
     }
 }

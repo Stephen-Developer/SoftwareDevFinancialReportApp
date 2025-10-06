@@ -14,49 +14,16 @@ namespace FinancialReportApp.UI
         private const string endText = "Option: ";
         private const string errorText = "Invalid option number.";
 
-        private static MainMenu _instance;
-
-        public static MainMenu Instance 
+        public MainMenu(IUserInterface userInterface, IUIRegistry menus) : base(userInterface, startText, endText, errorText)
         {
-            get
+            foreach(var descriptor in menus.GetAllMenus())
             {
-                if (_instance == null)
-                {
-                    _instance = new MainMenu();
-                }
-                return _instance;
+                AddMenuAction(descriptor.Label, () => descriptor.Menu.Display());
             }
-        }
 
-        public MainMenu() : base(startText, endText, errorText)
-        {
-            AddMenuAction("Input Salary", InputSalary);
-            AddMenuAction("Input Expenses", InputExpenses);
-            AddMenuAction("Input Custom Tax Brackets", InputCustomTaxBrackets);
-            AddMenuAction("Generate Report", GenerateReport);
-            AddMenuAction("Exit", () => exit = true);
-            AddMenuAction("Add Debug Expenses", AddDebugValues);
+            AddMenuAction("Add Debug Values", AddDebugValues);
             AddMenuAction("Add Debug Tax Brackets", AddDebugTaxBrackets);
-        }
-
-        private void InputSalary()
-        {
-            InputSalaryMenu.Instance.Display();
-        }
-
-        private void InputExpenses()
-        {
-            InputExpensesMenu.Instance.Display();
-        }
-
-        private void GenerateReport()
-        {
-            ReportUI.Instance.Display();
-        }
-
-        private void InputCustomTaxBrackets()
-        {
-            InputCustomTaxMenu.Instance.Display();
+            AddMenuAction("Exit", Exit);
         }
 
         private void AddDebugValues()

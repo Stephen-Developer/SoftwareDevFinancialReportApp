@@ -28,10 +28,5 @@ namespace FinancialReportApp.Systems
                 return _instance;
             }
         }
-
-        public void Start()
-        {
-            MainMenu.Instance.Display();
-        }
     }
 }

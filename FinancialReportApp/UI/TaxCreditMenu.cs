@@ -14,27 +14,13 @@ namespace FinancialReportApp.UI
         private const string endText = "Option: ";
         private const string errorText = "Invalid option number.";
 
-        private static TaxCreditMenu _instance;
-
-        public TaxCreditMenu() : base(startText, endText, errorText)
+        public TaxCreditMenu(IUserInterface userInterface) : base(userInterface, startText, endText, errorText)
         {
             AddMenuAction("Input Tax Credit", InputTaxCredit);
             AddMenuAction("Remove Tax Credit", RemoveTaxCredit);
             AddMenuAction("Clear Tax Credits", ClearTaxCredits);
             AddMenuAction("View Current Tax Credits", ViewTaxCreditAmount);
             AddMenuAction(BACK, () => exit = true);
-        }
-
-        public static TaxCreditMenu Instance
-        {
-            get
-            {
-                if (_instance == null)
-                {
-                    _instance = new TaxCreditMenu();
-                }
-                return _instance;
-            }
         }
 
         private void InputTaxCredit()

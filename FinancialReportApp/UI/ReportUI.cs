@@ -8,22 +8,17 @@ using System.Threading.Tasks;
 
 namespace FinancialReportApp.UI
 {
-    internal class ReportUI : UI
+    internal class ReportUI : UIBase
     {
-        private static ReportUI _instance;
-
         const string outputFileName = "FinancialReport.txt";
 
-        public static ReportUI Instance
+        private static readonly Lazy<ReportUI> _instance = new(() => new ReportUI(new ConsoleUserInterface()));
+
+        public static ReportUI Instance => _instance.Value;
+
+        public ReportUI(IUserInterface userInterface) : base(userInterface)
         {
-            get
-            {
-                if (_instance == null)
-                {
-                    _instance = new ReportUI();
-                }
-                return _instance;
-            }
+
         }
 
         public override void Display()

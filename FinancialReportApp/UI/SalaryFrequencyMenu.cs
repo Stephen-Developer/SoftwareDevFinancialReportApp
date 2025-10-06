@@ -14,21 +14,7 @@ namespace FinancialReportApp.UI
         private const string endText = "Option: ";
         private const string errorText = "Invalid option number.";
 
-        private static SalaryFrequencyMenu? _instance;
-
-        public static SalaryFrequencyMenu Instance 
-        {
-            get
-            {
-                if (_instance == null)
-                {
-                    _instance = new SalaryFrequencyMenu();
-                }
-                return _instance;
-            }
-        }
-
-        public SalaryFrequencyMenu() : base(startText, endText, errorText)
+        public SalaryFrequencyMenu(IUserInterface userInterface) : base(userInterface,startText, endText, errorText)
         {
             AddMenuAction(1, TimeFrequency.Weekly.ToString(), () => SelectFrequency(TimeFrequency.Weekly));
             AddMenuAction(2, TimeFrequency.Monthly.ToString(), () => SelectFrequency(TimeFrequency.Monthly));

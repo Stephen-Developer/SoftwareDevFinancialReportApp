@@ -12,20 +12,7 @@ namespace FinancialReportApp.UI
         private const string endText = "Option: ";
         private const string errorText = "Invalid option number.";
 
-        private static InputSalaryMenu _instance;
-        public static InputSalaryMenu Instance 
-        {
-            get
-            {
-                if (_instance == null)
-                {
-                    _instance = new InputSalaryMenu();
-                }
-                return _instance;
-            }
-        }
-
-        public InputSalaryMenu() : base(startText, endText, errorText)
+        public InputSalaryMenu(IUserInterface userInterface) : base(userInterface, startText, endText, errorText)
         {
             AddMenuAction("Input Salary Before Tax", InputSalaryBeforeTax);
             AddMenuAction("Input Salary After Tax", InputSalaryAfterTax);
@@ -35,17 +22,17 @@ namespace FinancialReportApp.UI
 
         private void InputSalaryBeforeTax()
         {
-            SalaryBeforeTaxUI.Instance.Display();
+            //SalaryBeforeTaxUI.Instance.Display();
         }
 
         private void InputSalaryAfterTax()
         {
-            SalaryAfterTaxUI.Instance.Display();
+            //SalaryAfterTaxUI.Instance.Display();
         }
 
         private void InputTaxCredits()
         {
-            TaxCreditMenu.Instance.Display();
+            //TaxCreditMenu.Instance.Display();
         }
     }
 }

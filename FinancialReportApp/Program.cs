@@ -1,5 +1,7 @@
 ﻿using FinancialReportApp.Systems;
 using FinancialReportApp.UI;
+using FinancialReportApp.Util;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace FinancialReportApp
 {
@@ -46,8 +48,39 @@ namespace FinancialReportApp
 
         static void Main(string[] args)
         {
-            UIController uIController = new UIController();
-            UIController.Instance.Start();
+            var services = new ServiceCollection();
+
+            //Core systems
+            services.AddSingleton<IUserInterface, ConsoleUserInterface>();
+
+            //UI
+            services.AddSingleton<MainMenu>();
+            services.AddSingleton<InputSalaryMenu>();
+            services.AddSingleton<InputExpensesMenu>();
+            services.AddSingleton<InputCustomTaxMenu>();
+            services.AddSingleton<ReportUI>();
+
+            //Menu registry
+            services.AddSingleton<IUIRegistry>(provider =>
+            {
+                var registry = new UIRegistry(provider);
+
+                //MainMenu
+                registry.RegisterMenu("Input Salary", typeof(InputSalaryMenu), order: 1, parentMenuType: typeof(MainMenu));
+                registry.RegisterMenu("Input Expenses", typeof(InputExpensesMenu), order: 2, parentMenuType: typeof(MainMenu));
+                registry.RegisterMenu("Input Custom Tax Brackets", typeof(InputCustomTaxMenu), order: 3, parentMenuType: typeof(MainMenu));
+                registry.RegisterMenu("Generate Report", typeof(ReportUI), order: 4, parentMenuType: typeof(MainMenu));
+                
+                //InputSalaryMenu
+                registry.RegisterMenu("Input Salary Amount", typeof(InputSalaryMenu), order: 1, parentMenuType: typeof(InputSalaryMenu));
+
+                return registry;
+            });
+
+
+            var provider = services.BuildServiceProvider();
+            var mainMenu = provider.GetRequiredService<MainMenu>();
+            mainMenu.Display();
         }
     }
 }

@@ -14,21 +14,7 @@ namespace FinancialReportApp.UI
         private const string endText = "Option: ";
         private const string errorText = "Invalid option number.";
 
-        private static InputCustomTaxMenu _instance;
-
-        public static InputCustomTaxMenu Instance
-        {
-            get
-            {
-                if(_instance == null)
-                {
-                    _instance = new InputCustomTaxMenu();
-                }
-                return _instance;
-            }
-        }
-
-        private InputCustomTaxMenu() : base(startText, endText, errorText)
+        public InputCustomTaxMenu(IUserInterface userInterface) : base(userInterface, startText, endText, errorText)
         {
             AddMenuAction("Input Custom Tax Brackets", InputCustomTax);
             AddMenuAction("Clear Custom Tax Brackets", ClearCustomTax);

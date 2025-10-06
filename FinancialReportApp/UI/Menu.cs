@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FinancialReportApp.UI
 {
-    abstract class Menu : UI
+    public abstract class Menu : UIBase
     {
         protected const string BACK = "Back";
 
@@ -17,7 +17,7 @@ namespace FinancialReportApp.UI
         protected string menuEndText;
         protected string menuErrorText;
 
-        protected Menu(string startText, string endText, string errorText)
+        protected Menu(IUserInterface userInterface, string startText, string endText, string errorText) : base(userInterface)
         {
             menuStartText = startText;
             menuEndText = endText;

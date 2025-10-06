@@ -14,25 +14,8 @@ namespace FinancialReportApp.UI
         private const string endText = "Option: ";
         private const string errorText = "Invalid option number.";
 
-        private static InputExpensesMenu _instance;
-
-        public static InputExpensesMenu Instance
+        public InputExpensesMenu(IUserInterface userInterface) : base(userInterface, startText, endText, errorText)
         {
-            get
-            {
-                if (_instance == null)
-                {
-                    _instance = new InputExpensesMenu();
-                }
-                return _instance;
-            }
-        }
-
-        private InputExpensesMenu() : base(startText, endText, errorText)
-        {
-            AddMenuAction("Input Expense Item", InputExpenseItem);
-            AddMenuAction("Remove Expense Item", RemoveExpenseItem);
-            AddMenuAction("View all Expenses", ViewAllExpenses);
             AddMenuAction(BACK, () => exit = true);
         }
 
