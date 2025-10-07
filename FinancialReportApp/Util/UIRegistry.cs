@@ -65,6 +65,10 @@ namespace FinancialReportApp.Util
             // Group by parent screen type
             foreach (var group in descriptors.GroupBy(d => d.ParentType))
             {
+                if(group.Key == null)
+                {
+                    continue;
+                }
                 // Try to get parent
                 var parentInstance = provider.GetRequiredService(group.Key);
 

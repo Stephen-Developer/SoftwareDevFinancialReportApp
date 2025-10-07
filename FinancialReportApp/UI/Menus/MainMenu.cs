@@ -7,8 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FinancialReportApp.UI
+namespace FinancialReportApp.UI.Menus
 {
+    [Menu("Main menu", default)]
     internal class MainMenu : Menu
     {
         private const string startText = "Please select an option:";
@@ -20,11 +21,14 @@ namespace FinancialReportApp.UI
             int maxOrder = registry.GetAllUIs()
                 .Where(d => d.ParentType == typeof(MainMenu)).Count();
 
-            AddMenuAction("Add Debug Values", AddDebugValues, maxOrder + 1);
-            AddMenuAction("Add Debug Tax Brackets", AddDebugTaxBrackets, maxOrder + 2);
-            AddMenuAction(EXIT, Exit, maxOrder + 3);
+#if DEBUG
+            AddMenuAction("Add Debug Values", AddDebugValues, ++maxOrder);
+            AddMenuAction("Add Debug Tax Brackets", AddDebugTaxBrackets, ++maxOrder);
+#endif
+            AddMenuAction(EXIT, Exit, ++maxOrder);
         }
 
+#if DEBUG
         private void AddDebugValues()
         {
             UIController.Instance.UserInputData.Salary = 100000;
@@ -45,5 +49,6 @@ namespace FinancialReportApp.UI
             TaxSystem.Instance.AddTaxBracket(41, 60, 0.4m);
             TaxSystem.Instance.AddTaxBracket(61, null, 0.5m);
         }
+#endif
     }
 }

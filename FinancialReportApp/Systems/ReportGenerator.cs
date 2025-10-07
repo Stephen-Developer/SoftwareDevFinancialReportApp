@@ -9,16 +9,16 @@ namespace FinancialReportApp.Systems
 {
     internal class ReportGenerator
     {
-        private static ReportGenerator _instance;
+        private static ReportGenerator instance;
         public static ReportGenerator Instance
         {
             get
             {
-                if (_instance == null)
+                if (instance == null)
                 {
-                    _instance = new ReportGenerator();
+                    instance = new ReportGenerator();
                 }
-                return _instance;
+                return instance;
             }
         }
 
@@ -100,10 +100,10 @@ namespace FinancialReportApp.Systems
         {
             return frequency switch
             {
-                Util.TimeFrequency.OneTime => salary,
-                Util.TimeFrequency.Yearly => salary,
-                Util.TimeFrequency.Monthly => salary * 12,
-                Util.TimeFrequency.Weekly => salary * 52,
+                TimeFrequency.OneTime => salary,
+                TimeFrequency.Yearly => salary,
+                TimeFrequency.Monthly => salary * 12,
+                TimeFrequency.Weekly => salary * 52,
                 _ => throw new ArgumentOutOfRangeException(nameof(frequency), "Invalid time frequency"),
             };
         }

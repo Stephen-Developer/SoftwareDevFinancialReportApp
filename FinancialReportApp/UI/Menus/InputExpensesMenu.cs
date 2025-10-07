@@ -6,27 +6,32 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FinancialReportApp.UI
+namespace FinancialReportApp.UI.Menus
 {
+    [Menu("Input salary", typeof(MainMenu))]
     internal class InputExpensesMenu : Menu
     {
         private const string startText = "Input Expenses Menu - Please select an option:";
         private const string endText = "Option: ";
         private const string errorText = "Invalid option number.";
 
-        public InputExpensesMenu(IUserInterface userInterface) : base(userInterface, startText, endText, errorText)
+        private IInputHandler inputHandler;
+
+        public InputExpensesMenu(IUserInterface userInterface, IInputHandler inputHandler) : base(userInterface, startText, endText, errorText)
         {
             AddMenuAction("Input Expense Item", InputExpenseItem);
             AddMenuAction("Remove Expense Item", RemoveExpenseItem);
             AddMenuAction("View All Expenses", ViewAllExpenses);
             AddMenuAction(BACK, () => exit = true);
+
+            this.inputHandler = inputHandler;
         }
 
         private void InputExpenseItem()
         {
-            string catagory = InputHandler.PromtString("Enter expense category: ");
-            decimal amount = InputHandler.PromtDecimal("Enter expense amount: ");
-            TimeFrequency frequency = InputHandler.PromtEnum<TimeFrequency>("Enter expense frequency (e.g., Monthly, Weekly): ");
+            string catagory = inputHandler.PromptString("Enter expense category: ");
+            decimal amount = inputHandler.PromptDecimal("Enter expense amount: ");
+            TimeFrequency frequency = inputHandler.PromptEnum<TimeFrequency>("Enter expense frequency (e.g., Monthly, Weekly): ");
 
             UIController.Instance.UserInputData.AddExpense(catagory, amount, frequency);
         }
@@ -46,7 +51,7 @@ namespace FinancialReportApp.UI
                 var exp = expenses[i];
                 Console.WriteLine($"{i + 1}. {exp.Category} - {exp.Amount} ({exp.Frequency})");
             }
-            int index = InputHandler.PromtInt("Enter the number of the expense to remove: ") - 1;
+            int index = inputHandler.PromptInt("Enter the number of the expense to remove: ") - 1;
             if (index >= 0 && index < expenses.Count)
             {
                 UIController.Instance.UserInputData.RemoveExpense(index);

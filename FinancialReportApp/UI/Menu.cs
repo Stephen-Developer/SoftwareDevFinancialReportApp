@@ -31,33 +31,28 @@ namespace FinancialReportApp.UI
             menuActions[key] = (label, action);
         }
 
-        public void AddMenuAction(int key, string label, Action action)
-        {
-            menuActions[key] = (label, action);
-        }
-
         public override void Display()
         {
             exit = false;
             while (!exit)
             {
-                Console.Clear();
-                Console.WriteLine(menuStartText);
+                userInterface.Clear();
+                userInterface.WriteLine(menuStartText);
                 foreach (var item in menuActions)
                 {
-                    Console.WriteLine($"{item.Key}. {item.Value.label}");
+                    userInterface.WriteLine($"{item.Key}. {item.Value.label}");
                 }
-                Console.Write(menuEndText);
-                if (int.TryParse(Console.ReadLine(), out int choice) && menuActions.ContainsKey(choice))
+                userInterface.Write(menuEndText);
+                if (int.TryParse(userInterface.ReadLine(), out int choice) && menuActions.ContainsKey(choice))
                 {
-                    Console.Clear();
+                    userInterface.Clear();
                     menuActions[choice].action();
                 }
                 else
                 {
-                    Console.Clear();
-                    Console.WriteLine(menuErrorText);
-                    Console.ReadKey();
+                    userInterface.Clear();
+                    userInterface.WriteLine(menuErrorText);
+                    userInterface.WaitForKey();
                 }
             }
         }

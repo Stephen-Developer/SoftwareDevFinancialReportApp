@@ -6,28 +6,33 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FinancialReportApp.UI
+namespace FinancialReportApp.UI.Menus
 {
+    [Menu("Input tax credits", typeof(InputSalaryMenu))]
     internal class TaxCreditMenu : Menu
     {
         private const string startText = "Tax Credit Menu - Please select an option:";
         private const string endText = "Option: ";
         private const string errorText = "Invalid option number.";
 
-        public TaxCreditMenu(IUserInterface userInterface) : base(userInterface, startText, endText, errorText)
+        private IInputHandler inputHandler;
+
+        public TaxCreditMenu(IUserInterface userInterface, IInputHandler inputHandler) : base(userInterface, startText, endText, errorText)
         {
             AddMenuAction("Input Tax Credit", InputTaxCredit);
             AddMenuAction("Remove Tax Credit", RemoveTaxCredit);
             AddMenuAction("Clear Tax Credits", ClearTaxCredits);
             AddMenuAction("View Current Tax Credits", ViewTaxCreditAmount);
             AddMenuAction(BACK, () => exit = true);
+
+            this.inputHandler = inputHandler;
         }
 
         private void InputTaxCredit()
         {
             Console.Clear();
             Console.Write("Input tax credit/deductable: ");
-            decimal credit = InputHandler.PromtDecimal("Input tax credit/deductable: ", 0);
+            decimal credit = inputHandler.PromptDecimal("Input tax credit/deductable: ", 0);
 
             TaxSystem.Instance.taxCredits.Add(credit);
         }
@@ -47,7 +52,7 @@ namespace FinancialReportApp.UI
                 var exp = credits[i];
                 Console.WriteLine($"{i + 1}. {exp})");
             }
-            int index = InputHandler.PromtInt("Enter the number of the credits to remove: ") - 1;
+            int index = inputHandler.PromptInt("Enter the number of the credits to remove: ") - 1;
             if (index >= 0 && index < credits.Count)
             {
                 TaxSystem.Instance.taxCredits.RemoveAt(index);
@@ -62,7 +67,7 @@ namespace FinancialReportApp.UI
         private void ClearTaxCredits()
         {
             Console.Clear();
-            var clearTaxCredits = InputHandler.PromtYesNo("Are you sure you want to clear all tax credits?");
+            var clearTaxCredits = inputHandler.PromptYesNo("Are you sure you want to clear all tax credits?");
             if(clearTaxCredits)
             {
                 Console.WriteLine("All tax credits cleared.");

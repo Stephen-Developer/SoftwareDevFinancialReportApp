@@ -6,8 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FinancialReportApp.UI
+namespace FinancialReportApp.UI.Menus
 {
+    [Menu("Input Salary", typeof(MainMenu))]
     internal class InputSalaryMenu : Menu
     {
         private const string startText = "Input Salary Menu - Please select an option:";
@@ -16,7 +17,10 @@ namespace FinancialReportApp.UI
 
         public InputSalaryMenu(IUserInterface userInterface, IUIRegistry registry) : base(userInterface, startText, endText, errorText)
         {
-            AddMenuAction(BACK, Exit);
+            int maxOrder = registry.GetAllUIs()
+                .Where(d => d.ParentType == typeof(InputSalaryMenu)).Count();
+
+            AddMenuAction(BACK, Exit, ++maxOrder);
         }
     }
 }
