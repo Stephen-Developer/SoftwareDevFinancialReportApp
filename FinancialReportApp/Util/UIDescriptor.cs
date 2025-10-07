@@ -15,14 +15,16 @@ namespace FinancialReportApp.Util
     public class UIDescriptor
     {
         public string Label { get; }
-        public UI.UIBase Menu { get; }
+        public Type Type { get; }
         public int Order { get; }
+        public Type ParentType { get; }
 
-        public UIDescriptor(string label, UI.UIBase menu, int order = 0)
+        public UIDescriptor(string label, Type type, int order = 0, Type partentType = null)
         {
             Label = label;
-            Menu = menu;
+            Type = type;
             Order = order;
+            ParentType = partentType;
         }
     }
 }

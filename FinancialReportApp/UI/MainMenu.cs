@@ -1,5 +1,6 @@
 ﻿using FinancialReportApp.Systems;
 using FinancialReportApp.Util;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,16 +15,14 @@ namespace FinancialReportApp.UI
         private const string endText = "Option: ";
         private const string errorText = "Invalid option number.";
 
-        public MainMenu(IUserInterface userInterface, IUIRegistry menus) : base(userInterface, startText, endText, errorText)
+        public MainMenu(IUserInterface userInterface, IUIRegistry registry) : base(userInterface, startText, endText, errorText)
         {
-            foreach(var descriptor in menus.GetAllMenus())
-            {
-                AddMenuAction(descriptor.Label, () => descriptor.Menu.Display());
-            }
+            int maxOrder = registry.GetAllUIs()
+                .Where(d => d.ParentType == typeof(MainMenu)).Count();
 
-            AddMenuAction("Add Debug Values", AddDebugValues);
-            AddMenuAction("Add Debug Tax Brackets", AddDebugTaxBrackets);
-            AddMenuAction("Exit", Exit);
+            AddMenuAction("Add Debug Values", AddDebugValues, maxOrder + 1);
+            AddMenuAction("Add Debug Tax Brackets", AddDebugTaxBrackets, maxOrder + 2);
+            AddMenuAction(EXIT, Exit, maxOrder + 3);
         }
 
         private void AddDebugValues()

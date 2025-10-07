@@ -45,8 +45,7 @@ namespace FinancialReportApp.UI
                 {
                     Console.WriteLine($"Failed to write report to {outputPath}");
                 }
-
-                    Console.ReadLine();
+                Console.ReadLine();
             }
         }
     }

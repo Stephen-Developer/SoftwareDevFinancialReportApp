@@ -11,13 +11,18 @@ namespace FinancialReportApp.Util
     public interface IUIRegistry
     {
         T Get<T>() where T : UI.UIBase;
-        IEnumerable<UIDescriptor> GetAllMenus();    
+        IEnumerable<UIDescriptor> GetAllUIs();    
+        IEnumerable<UIDescriptor> GetAllUIsForType<TParent>();
+        void RegisterMenu(string label, Type uiType, Type parentType = null); 
+        void RegisterMenu(string label, Type menuType, int order, Type parentMenuType = null);
+        void BuildMenuHierarchy();
+        object Resolve(Type uiType);
     }
 
     public class UIRegistry : IUIRegistry
     {
         private readonly IServiceProvider provider;
-        private readonly Dictionary<Type, List<UIDescriptor>> menuMap = new();
+        private readonly List<UIDescriptor> descriptors = new();
 
         public UIRegistry(IServiceProvider provider)
         {
@@ -29,30 +34,65 @@ namespace FinancialReportApp.Util
             return provider.GetRequiredService<T>();
         }
 
-        public IEnumerable<UIDescriptor> GetAllMenus()
+        public IEnumerable<UIDescriptor> GetAllUIs()
         {
-            return GetAllMenusForType(typeof(MainMenu));
+            return descriptors;
         }
 
-        public IEnumerable<UIDescriptor> GetAllMenusForType(Type type)
+        public IEnumerable<UIDescriptor> GetAllUIsForType<TParent>()
         {
-            if (menuMap.TryGetValue(type, out var list))
-                return list.OrderBy(m => m.Order);
-
-            return Enumerable.Empty<UIDescriptor>();
+            return descriptors
+            .Where(d => d.ParentType == typeof(TParent))
+            .OrderBy(d => d.Order);
         }
 
-        public void RegisterMenu(string label, Type menuType, int order = 0, Type parentMenuType = null)
+        public void RegisterMenu(string label, Type uiType, Type parentType = null)
         {
-            var menuInstance = (UI.UIBase)provider.GetRequiredService(menuType);
-            var descriptor = new UIDescriptor(label, menuInstance, order);
+            var order = descriptors.Count(d => d.ParentType == parentType);
+            RegisterMenu(label, uiType, order + 1, parentType);
+        }
 
-            var key = parentMenuType ?? typeof(MainMenu);
+        public void RegisterMenu(string label, Type uiType, int order, Type parentMenuType = null)
+        {
+            if (!typeof(IDisplayableUI).IsAssignableFrom(uiType))
+                throw new ArgumentException($"{uiType.Name} must implement IDisplayableUI");
 
-            if (!menuMap.ContainsKey(key))
-                menuMap[key] = new List<UIDescriptor>();
+            descriptors.Add(new UIDescriptor(label, uiType, order, parentMenuType));
+        }
 
-            menuMap[key].Add(descriptor);
+        public void BuildMenuHierarchy()
+        {
+            // Group by parent screen type
+            foreach (var group in descriptors.GroupBy(d => d.ParentType))
+            {
+                // Try to get parent
+                var parentInstance = provider.GetRequiredService(group.Key);
+
+                // Only menus have AddMenuAction
+                if (parentInstance is not Menu parentMenu)
+                    continue;
+
+                foreach (var descriptor in group.OrderBy(d => d.Order))
+                {
+                    var childInstance = provider.GetRequiredService(descriptor.Type);
+
+                    if (childInstance is IDisplayableUI ui)
+                    {
+                        // Allow any screen (menu or simple UI) to be registered
+                        parentMenu.AddMenuAction(descriptor.Label, ui.Display, descriptor.Order);
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException(
+                            $"{descriptor.Type.Name} does not implement IDisplayableUI");
+                    }
+                }
+            }
+        }
+
+        public object Resolve(Type uiType)
+        {
+            return provider.GetRequiredService(uiType);
         }
     }
 }

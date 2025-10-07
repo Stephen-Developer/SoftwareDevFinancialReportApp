@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace FinancialReportApp.UI
 {
-    public abstract class UIBase
+    public abstract class UIBase : IDisplayableUI
     {
         protected IUserInterface userInterface;
 

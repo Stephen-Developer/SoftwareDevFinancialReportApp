@@ -9,8 +9,9 @@ namespace FinancialReportApp.UI
     public abstract class Menu : UIBase
     {
         protected const string BACK = "Back";
+        protected const string EXIT = "Exit";
 
-        protected readonly Dictionary<int, (string label, Action action)> menuActions = new Dictionary<int, (string label, Action action)>();
+        protected readonly SortedDictionary<int, (string label, Action action)> menuActions = new SortedDictionary<int, (string label, Action action)>();
 
         protected bool exit = false;
         protected string menuStartText;
@@ -24,9 +25,9 @@ namespace FinancialReportApp.UI
             menuErrorText = errorText;
         }
 
-        public void AddMenuAction(string label, Action action)
+        public void AddMenuAction(string label, Action action, int? order = null)
         {
-            int key = menuActions.Count > 0 ? menuActions.Keys.Max() + 1 : 1;
+            int key = order ?? (menuActions.Count > 0 ? menuActions.Keys.Max() + 1 : 1);
             menuActions[key] = (label, action);
         }
 

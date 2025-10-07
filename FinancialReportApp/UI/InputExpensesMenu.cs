@@ -16,6 +16,9 @@ namespace FinancialReportApp.UI
 
         public InputExpensesMenu(IUserInterface userInterface) : base(userInterface, startText, endText, errorText)
         {
+            AddMenuAction("Input Expense Item", InputExpenseItem);
+            AddMenuAction("Remove Expense Item", RemoveExpenseItem);
+            AddMenuAction("View All Expenses", ViewAllExpenses);
             AddMenuAction(BACK, () => exit = true);
         }
 

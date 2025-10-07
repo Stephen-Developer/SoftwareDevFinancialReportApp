@@ -59,26 +59,30 @@ namespace FinancialReportApp
             services.AddSingleton<InputExpensesMenu>();
             services.AddSingleton<InputCustomTaxMenu>();
             services.AddSingleton<ReportUI>();
+            services.AddSingleton<SalaryBeforeTaxUI>();
+            services.AddSingleton<SalaryAfterTaxUI>();
+            services.AddSingleton<TaxCreditMenu>();
 
-            //Menu registry
-            services.AddSingleton<IUIRegistry>(provider =>
-            {
-                var registry = new UIRegistry(provider);
-
-                //MainMenu
-                registry.RegisterMenu("Input Salary", typeof(InputSalaryMenu), order: 1, parentMenuType: typeof(MainMenu));
-                registry.RegisterMenu("Input Expenses", typeof(InputExpensesMenu), order: 2, parentMenuType: typeof(MainMenu));
-                registry.RegisterMenu("Input Custom Tax Brackets", typeof(InputCustomTaxMenu), order: 3, parentMenuType: typeof(MainMenu));
-                registry.RegisterMenu("Generate Report", typeof(ReportUI), order: 4, parentMenuType: typeof(MainMenu));
-                
-                //InputSalaryMenu
-                registry.RegisterMenu("Input Salary Amount", typeof(InputSalaryMenu), order: 1, parentMenuType: typeof(InputSalaryMenu));
-
-                return registry;
-            });
-
-
+            //Registry
+            services.AddSingleton<IUIRegistry, UIRegistry>();
             var provider = services.BuildServiceProvider();
+            var registry = provider.GetRequiredService<IUIRegistry>();
+
+            //Set up hierarchy
+            //MainMenu
+            registry.RegisterMenu("Input Salary", typeof(InputSalaryMenu), typeof(MainMenu));
+            registry.RegisterMenu("Input Expenses", typeof(InputExpensesMenu), typeof(MainMenu));
+            registry.RegisterMenu("Input Custom Tax Brackets", typeof(InputCustomTaxMenu), typeof(MainMenu));
+            registry.RegisterMenu("Generate Report", typeof(ReportUI), typeof(MainMenu));
+
+            //InputSalaryMenu
+            registry.RegisterMenu("Input Salary Before Tax", typeof(SalaryBeforeTaxUI), typeof(InputSalaryMenu));
+            registry.RegisterMenu("Input Salary After Tax", typeof(SalaryAfterTaxUI), typeof(InputSalaryMenu));
+            registry.RegisterMenu("Input Tax Credits", typeof(TaxCreditMenu), typeof(InputSalaryMenu));
+
+            //Build hierarchy
+            registry.BuildMenuHierarchy();
+
             var mainMenu = provider.GetRequiredService<MainMenu>();
             mainMenu.Display();
         }

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using FinancialReportApp.Util;
+using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,27 +14,9 @@ namespace FinancialReportApp.UI
         private const string endText = "Option: ";
         private const string errorText = "Invalid option number.";
 
-        public InputSalaryMenu(IUserInterface userInterface) : base(userInterface, startText, endText, errorText)
+        public InputSalaryMenu(IUserInterface userInterface, IUIRegistry registry) : base(userInterface, startText, endText, errorText)
         {
-            AddMenuAction("Input Salary Before Tax", InputSalaryBeforeTax);
-            AddMenuAction("Input Salary After Tax", InputSalaryAfterTax);
-            AddMenuAction("Input Tax Credits", InputTaxCredits);
-            AddMenuAction(BACK, () => exit = true);
-        }
-
-        private void InputSalaryBeforeTax()
-        {
-            //SalaryBeforeTaxUI.Instance.Display();
-        }
-
-        private void InputSalaryAfterTax()
-        {
-            //SalaryAfterTaxUI.Instance.Display();
-        }
-
-        private void InputTaxCredits()
-        {
-            //TaxCreditMenu.Instance.Display();
+            AddMenuAction(BACK, Exit);
         }
     }
 }

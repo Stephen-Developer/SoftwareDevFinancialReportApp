@@ -10,8 +10,6 @@ namespace FinancialReportApp.UI
 {
     internal class SalaryAfterTaxUI : UIBase
     {
-        private static SalaryAfterTaxUI? _instance;
-
         private const string salaryText = "Enter your salary after tax: ";
         private const string taxText = "Enter the amount of tax paid: ";
 
