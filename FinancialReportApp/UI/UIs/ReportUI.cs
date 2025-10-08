@@ -15,16 +15,18 @@ namespace FinancialReportApp.UI.UIs
         const string outputFileName = "FinancialReport.txt";
 
         private readonly IInputHandler inputHandler;
+        private readonly IReportGenerator reportGenerator;
 
-        public ReportUI(IUserInterface userInterface, IInputHandler inputHandler) : base(userInterface)
+        public ReportUI(IUserInterface userInterface, IInputHandler inputHandler, IReportGenerator reportGenerator) : base(userInterface)
         {
             this.inputHandler = inputHandler;
+            this.reportGenerator = reportGenerator;
         }
 
         public override void Display()
         {
-            ReportGenerator.Instance.ProcessData();
-            var report = ReportGenerator.Instance.GenerateReport();
+            reportGenerator.ProcessData();
+            var report = reportGenerator.GenerateReport();
             userInterface.WriteLine(report);
             userInterface.ReadLine();
 

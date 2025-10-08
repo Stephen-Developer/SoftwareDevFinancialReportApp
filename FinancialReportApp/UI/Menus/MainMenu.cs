@@ -9,43 +9,48 @@ using System.Threading.Tasks;
 
 namespace FinancialReportApp.UI.Menus
 {
-    [Menu("Main menu", default)]
+    [Menu("Main menu", null)]
     internal class MainMenu : Menu
     {
         private const string startText = "Please select an option:";
         private const string endText = "Option: ";
         private const string errorText = "Invalid option number.";
 
-        public MainMenu(IUserInterface userInterface, IUIRegistry registry) : base(userInterface, startText, endText, errorText)
-        {
-            int maxOrder = registry.GetMaxOrderForParent<MainMenu>();
 #if DEBUG
+        private readonly IUserData userData;
+
+        public MainMenu(IUserInterface userInterface, IUIRegistry registry, IUserData userData) : base(userInterface, startText, endText, errorText)
+        {
+            this.userData = userData;
+            int maxOrder = registry.GetMaxOrderForParent<MainMenu>();
             AddMenuAction("Add Debug Values", AddDebugValues, ++maxOrder);
             AddMenuAction("Add Debug Tax Brackets", AddDebugTaxBrackets, ++maxOrder);
-#endif
-            AddMenuAction(EXIT, Exit, ++maxOrder);
         }
 
-#if DEBUG
         private void AddDebugValues()
         {
-            UIController.Instance.UserInputData.Salary = 100000;
-            UIController.Instance.UserInputData.SalaryFrequency = TimeFrequency.Yearly;
-            UIController.Instance.UserInputData.AddExpense("Car", 10000, TimeFrequency.OneTime);
-            UIController.Instance.UserInputData.AddExpense("Car", 20, TimeFrequency.Weekly);
-            UIController.Instance.UserInputData.AddExpense("Bills", 200, TimeFrequency.Monthly);
-            UIController.Instance.UserInputData.AddExpense("Food", 60, TimeFrequency.Weekly);
-            UIController.Instance.UserInputData.AddExpense("Rent", 1500, TimeFrequency.Monthly);
-            TaxSystem.Instance.taxCredits.Add(1000);
-            TaxSystem.Instance.taxCredits.Add(500);
+            userData.Salary = 100000;
+            userData.SalaryFrequency = TimeFrequency.Yearly;
+            userData.AddExpense("Car", 10000, TimeFrequency.OneTime);
+            userData.AddExpense("Car", 20, TimeFrequency.Weekly);
+            userData.AddExpense("Bills", 200, TimeFrequency.Monthly);
+            userData.AddExpense("Food", 60, TimeFrequency.Weekly);
+            userData.AddExpense("Rent", 1500, TimeFrequency.Monthly);
+            userData.AddTaxCredit(1000);
+            userData.AddTaxCredit(500);
         }
 
         private void AddDebugTaxBrackets()
         {
-            TaxSystem.Instance.AddTaxBracket(0, 20, 0.2m);
-            TaxSystem.Instance.AddTaxBracket(21, 40, 0.3m);
-            TaxSystem.Instance.AddTaxBracket(41, 60, 0.4m);
-            TaxSystem.Instance.AddTaxBracket(61, null, 0.5m);
+            userData.AddTaxBracket(0, 20, 0.2m);
+            userData.AddTaxBracket(21, 40, 0.3m);
+            userData.AddTaxBracket(41, 60, 0.4m);
+            userData.AddTaxBracket(61, null, 0.5m);
+        }
+#else
+        public MainMenu(IUserInterface userInterface, IUIRegistry registry) : base(userInterface, startText, endText, errorText)
+        {
+            
         }
 #endif
     }

@@ -12,16 +12,18 @@ namespace FinancialReportApp.UI.UIs
     [Menu("Remove Tax Credit", typeof(TaxCreditMenu))]
     internal class RemoveTaxCreditUI : UIBase
     {
-        private IInputHandler inputHandler;
+        private readonly IInputHandler inputHandler;
+        private readonly IUserData userData;
 
-        public RemoveTaxCreditUI(IUserInterface userInterface, IInputHandler inputHandler) : base(userInterface)
+        public RemoveTaxCreditUI(IUserInterface userInterface, IInputHandler inputHandler, IUserData userData) : base(userInterface)
         {
             this.inputHandler = inputHandler;
+            this.userData = userData;
         }
 
         public override void Display()
         {
-            var credits = TaxSystem.Instance.taxCredits;
+            var credits = userData.TaxCredits;
             if (credits.Count == 0)
             {
                 userInterface.WriteLine("No credits to remove.");
@@ -37,7 +39,7 @@ namespace FinancialReportApp.UI.UIs
             int index = inputHandler.PromptInt("Enter the number of the credits to remove: ") - 1;
             if (index >= 0 && index < credits.Count)
             {
-                TaxSystem.Instance.taxCredits.RemoveAt(index);
+                userData.RemoveTaxCredit(index);
                 userInterface.WriteLine("Expense removed.");
             }
             else

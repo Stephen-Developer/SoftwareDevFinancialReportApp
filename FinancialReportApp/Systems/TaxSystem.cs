@@ -7,43 +7,57 @@ using System.Threading.Tasks;
 
 namespace FinancialReportApp.Systems
 {
-    internal class TaxSystem
+    public interface ITaxSystem
     {
-        private static TaxSystem _instance;
+        decimal CalculateTax(decimal income);
+    }
 
-        public static TaxSystem Instance
-        {
-            get
-            {
-                if (_instance == null)
-                {
-                    _instance = new TaxSystem();
-                }
-                return _instance;
-            }
-        }
-
-        public bool useCustomTax = false;
-
-        public readonly List<TaxBracket> defaultTaxBracketList = new List<TaxBracket>
+    internal class TaxSystem : ITaxSystem
+    {
+        private readonly List<TaxBracket> defaultTaxBracketList = new List<TaxBracket>
         {
             new TaxBracket (0, 20, 20),
             new TaxBracket (20, null, 40)
         };
 
-        public List<TaxBracket> customTaxBracketList = new List<TaxBracket>();
+        private readonly IUserData userData;
 
-        public List<decimal> taxCredits = new List<decimal>();
-
-        public TaxSystem()
+        public TaxSystem(IUserData userData)
         {
-
+            this.userData = userData;
         }
 
-        public void AddTaxBracket(decimal lowerBoundary, decimal? upperBoundary, decimal rate)
+        public decimal CalculateTax(decimal income)
         {
-            var taxBracket = new TaxBracket(lowerBoundary, upperBoundary, rate);
-            customTaxBracketList.Add(taxBracket);
+            if (userData.UseCustomTax)
+            {
+                return 0;
+            }
+
+            decimal taxOwed = 0;
+
+            foreach (var bracket in defaultTaxBracketList)
+            {
+                if (income > bracket.LowerBoundary)
+                {
+                    decimal incomeInBracket;
+                    if (bracket.UpperBoundary.HasValue && income > bracket.UpperBoundary.Value)
+                    {
+                        incomeInBracket = Math.Min(income, bracket.UpperBoundary.Value) - bracket.LowerBoundary;
+                    }
+                    else
+                    {
+                        incomeInBracket = income - bracket.LowerBoundary;
+                    }
+                    taxOwed += incomeInBracket * (bracket.Rate / 100);
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            return taxOwed;
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FinancialReportApp.Util
 {
-    internal class Expense
+    public class Expense
     {
         private readonly string category;
         private readonly decimal amount;

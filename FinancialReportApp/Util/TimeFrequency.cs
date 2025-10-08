@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FinancialReportApp.Util
 {
-    internal enum TimeFrequency
+    public enum TimeFrequency
     {
         OneTime,
         Weekly,

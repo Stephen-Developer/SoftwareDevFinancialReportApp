@@ -16,18 +16,20 @@ namespace FinancialReportApp.UI
         
         private readonly IUIRegistry registry;
         private readonly IInputHandler inputHandler;
+        private readonly IUserData userData;
 
-        public SalaryBeforeTaxUI(IUserInterface userInterface, IUIRegistry registry, IInputHandler inputHandler) : base(userInterface)
+        public SalaryBeforeTaxUI(IUserInterface userInterface, IUIRegistry registry, IInputHandler inputHandler, IUserData userData) : base(userInterface)
         {
             this.registry = registry;
             this.inputHandler = inputHandler;
+            this.userData = userData;
         }
 
         public override void Display()
         {
             userInterface.Clear();
-            UIController.Instance.UserInputData.Salary = inputHandler.PromptDecimal(salaryText);
-            UIController.Instance.UserInputData.IsSalaryBeforeTax = true;
+            userData.Salary = inputHandler.PromptDecimal(salaryText);
+            userData.IsSalaryBeforeTax = true;
 
             registry.Get<SalaryFrequencyMenu>().Display();
 

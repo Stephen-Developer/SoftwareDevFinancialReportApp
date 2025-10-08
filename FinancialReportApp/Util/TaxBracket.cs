@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FinancialReportApp.Util
 {
-    internal class TaxBracket
+    public class TaxBracket
     {
         private readonly decimal lowerBoundary;
         private readonly decimal? upperBoundary;

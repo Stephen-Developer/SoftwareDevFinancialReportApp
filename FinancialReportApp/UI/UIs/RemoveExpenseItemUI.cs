@@ -13,16 +13,18 @@ namespace FinancialReportApp.UI.UIs
     internal class RemoveExpenseItemUI : UIBase
     {
         private readonly IInputHandler inputHandler;
+        private readonly IUserData userData ;
 
-        public RemoveExpenseItemUI(IUserInterface userInterface, IInputHandler inputHandler) : base(userInterface)
+        public RemoveExpenseItemUI(IUserInterface userInterface, IInputHandler inputHandler, IUserData userData) : base(userInterface)
         {
             this.userInterface = userInterface;
             this.inputHandler = inputHandler;
+            this.userData = userData;
         }
 
         public override void Display()
         {
-            var expenses = UIController.Instance.UserInputData.Expenses;
+            var expenses = userData.Expenses;
             if (expenses.Count == 0)
             {
                 userInterface.WriteLine("No expenses to remove.");
@@ -38,7 +40,7 @@ namespace FinancialReportApp.UI.UIs
             int index = inputHandler.PromptInt("Enter the number of the expense to remove: ") - 1;
             if (index >= 0 && index < expenses.Count)
             {
-                UIController.Instance.UserInputData.RemoveExpense(index);
+                userData.RemoveExpense(index);
                 userInterface.WriteLine("Expense removed.");
             }
             else

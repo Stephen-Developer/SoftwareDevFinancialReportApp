@@ -15,7 +15,9 @@ namespace FinancialReportApp.UI.Menus
         private const string endText = "Option: ";
         private const string errorText = "Invalid option number.";
 
-        public SalaryFrequencyMenu(IUserInterface userInterface) : base(userInterface,startText, endText, errorText)
+        private readonly IUserData userData;
+
+        public SalaryFrequencyMenu(IUserInterface userInterface, IUserData userData) : base(userInterface,startText, endText, errorText)
         {
             AddMenuAction(TimeFrequency.Weekly.ToString(), () => SelectFrequency(TimeFrequency.Weekly));
             AddMenuAction(TimeFrequency.Monthly.ToString(), () => SelectFrequency(TimeFrequency.Monthly));
@@ -24,7 +26,7 @@ namespace FinancialReportApp.UI.Menus
 
         private void SelectFrequency(TimeFrequency frequency)
         {
-            UIController.Instance.UserInputData.SalaryFrequency = frequency;
+            userData.SalaryFrequency = frequency;
             exit = true;
         }
     }

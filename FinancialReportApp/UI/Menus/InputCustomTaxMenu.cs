@@ -18,8 +18,7 @@ namespace FinancialReportApp.UI.Menus
 
         public InputCustomTaxMenu(IUserInterface userInterface, IUIRegistry registry) : base(userInterface, startText, endText, errorText)
         {
-            int maxOrder = registry.GetMaxOrderForParent<InputCustomTaxMenu>();            
-            AddMenuAction(BACK, Exit, ++maxOrder);
+            
         }
     }
 }

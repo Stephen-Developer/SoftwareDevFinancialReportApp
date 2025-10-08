@@ -13,10 +13,12 @@ namespace FinancialReportApp.UI.UIs
     internal class ClearTaxCreditsUI : UIBase
     {
         private readonly IInputHandler inputHandler;
+        private readonly IUserData userData;
 
-        public ClearTaxCreditsUI(IUserInterface userInterface, IInputHandler inputHandler) : base(userInterface)
+        public ClearTaxCreditsUI(IUserInterface userInterface, IInputHandler inputHandler, IUserData userData) : base(userInterface)
         {
             this.inputHandler = inputHandler;
+            this.userData = userData;
         }
 
         public override void Display()
@@ -26,7 +28,7 @@ namespace FinancialReportApp.UI.UIs
             if (clearTaxCredits)
             {
                 userInterface.WriteLine("All tax credits cleared.");
-                TaxSystem.Instance.taxCredits.Clear();
+                userData.ClearTaxCredits();
             }
             else
             {

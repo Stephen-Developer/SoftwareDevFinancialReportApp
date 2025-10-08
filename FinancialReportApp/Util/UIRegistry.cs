@@ -22,6 +22,9 @@ namespace FinancialReportApp.Util
 
     public class UIRegistry : IUIRegistry
     {
+        private const string BACK = "Back";
+        private const string EXIT = "Exit";
+
         private readonly IServiceProvider provider;
         private readonly IUIFlowController flowController;
 
@@ -99,6 +102,33 @@ namespace FinancialReportApp.Util
                             $"{descriptor.Type.Name} does not implement IDisplayableUI");
                     }
                 }
+
+                // Now, add "Back" to all menus that have a parent
+                foreach (var descriptor in descriptors.Where(d => d.ParentType != null))
+                {
+                    var menuInstance = provider.GetRequiredService(descriptor.Type);
+                    if (menuInstance is Menu menu)
+                    {
+                        // Avoid duplicate Back entries (in case you call BuildMenuHierarchy multiple times)
+                        if (!menuContainsAction(menu, BACK))
+                        {
+                            menu.AddMenuAction(BACK, () => flowController.NavigateBack());
+                        }
+                    }
+                }
+
+                // Add "Exit" to root menus
+                foreach (var descriptor in descriptors.Where(d => d.ParentType == null))
+                {
+                    var menuInstance = provider.GetRequiredService(descriptor.Type);
+                    if (menuInstance is Menu menu)
+                    {
+                        if (!menuContainsAction(menu, EXIT))
+                        {
+                            menu.AddMenuAction(EXIT, () => flowController.Exit());
+                        }
+                    }
+                }
             }
         }
 
@@ -110,6 +140,15 @@ namespace FinancialReportApp.Util
         public int GetMaxOrderForParent<TParent>()
         {
             return descriptors.Count(d => d.ParentType == typeof(TParent));
+        }
+
+        // Helper to check if a menu already has a specific label
+        private static bool menuContainsAction(Menu menu, string label)
+        {
+            return menu.GetType()
+                .GetField("menuActions", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)?
+                .GetValue(menu) is SortedDictionary<int, (string label, Action action)> actions
+                && actions.Values.Any(a => a.label.Equals(label, StringComparison.OrdinalIgnoreCase));
         }
     }
 }

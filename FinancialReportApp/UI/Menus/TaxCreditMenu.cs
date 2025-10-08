@@ -17,8 +17,7 @@ namespace FinancialReportApp.UI.Menus
 
         public TaxCreditMenu(IUserInterface userInterface, IUIRegistry registry) : base(userInterface, startText, endText, errorText)
         {
-            int maxOrder = registry.GetMaxOrderForParent<TaxCreditMenu>();
-            AddMenuAction(BACK, Exit, ++maxOrder);
+            
         }
     }
 }

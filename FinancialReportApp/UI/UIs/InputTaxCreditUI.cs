@@ -13,10 +13,12 @@ namespace FinancialReportApp.UI.UIs
     internal class InputTaxCreditUI : UIBase
     {
         private readonly IInputHandler inputHandler;
+        private readonly IUserData userData;
 
-        public InputTaxCreditUI(IUserInterface userInterface, IInputHandler inputHandler) : base(userInterface)
+        public InputTaxCreditUI(IUserInterface userInterface, IInputHandler inputHandler, IUserData userData) : base(userInterface)
         {
             this.inputHandler = inputHandler;
+            this.userData = userData;
         }
 
         public override void Display()
@@ -25,7 +27,7 @@ namespace FinancialReportApp.UI.UIs
             userInterface.Write("Input tax credit/deductable: ");
             decimal credit = inputHandler.PromptDecimal("Input tax credit/deductable: ", 0);
 
-            TaxSystem.Instance.taxCredits.Add(credit);
+            userData.AddTaxCredit(credit);
         }
     }
 }

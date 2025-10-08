@@ -11,13 +11,16 @@ namespace FinancialReportApp.UI.UIs
     [Menu("View all expenses", typeof(Menus.InputExpensesMenu))]
     internal class ViewExpensesUI : UIBase
     {
-        public ViewExpensesUI(IUserInterface userInterface) : base(userInterface)
+        private readonly IUserData userData;
+
+        public ViewExpensesUI(IUserInterface userInterface, IUserData userData) : base(userInterface)
         {
+            this.userData = userData;
         }
 
         public override void Display()
         {
-            var expenses = UIController.Instance.UserInputData.Expenses;
+            var expenses = userData.Expenses;
             if (expenses.Count == 0)
             {
                 userInterface.WriteLine("No expenses recorded.");

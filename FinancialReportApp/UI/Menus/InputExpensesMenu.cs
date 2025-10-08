@@ -17,8 +17,7 @@ namespace FinancialReportApp.UI.Menus
 
         public InputExpensesMenu(IUserInterface userInterface, IUIRegistry registry) : base(userInterface, startText, endText, errorText)
         {
-            var maxOrder = registry.GetMaxOrderForParent<InputExpensesMenu>();
-            AddMenuAction(BACK, Exit, ++maxOrder);
+            
         }
     }
 }

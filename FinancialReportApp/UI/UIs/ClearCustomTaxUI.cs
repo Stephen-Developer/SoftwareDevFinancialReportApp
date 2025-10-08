@@ -13,15 +13,17 @@ namespace FinancialReportApp.UI.UIs
     internal class ClearCustomTaxUI : UIBase
     {
         private readonly IInputHandler inputHandler;
+        private readonly IUserData userData;
 
-        public ClearCustomTaxUI(IUserInterface userInterface, IInputHandler inputHandler) : base(userInterface)
+        public ClearCustomTaxUI(IUserInterface userInterface, IInputHandler inputHandler, IUserData userData) : base(userInterface)
         {
             this.inputHandler = inputHandler;
+            this.userData = userData;
         }
 
         public override void Display()
         {
-            if(TaxSystem.Instance.customTaxBracketList.Count == 0)
+            if(userData.CustomTaxBrackets.Count == 0)
             {
                 return;
             }
@@ -29,7 +31,7 @@ namespace FinancialReportApp.UI.UIs
             var clearTaxBrackets = inputHandler.PromptYesNo("Are you sure you want to clear all custom tax brackets?");
             if (clearTaxBrackets)
             {
-                TaxSystem.Instance.customTaxBracketList.Clear();
+                userData.ClearTaxBrackets();
                 userInterface.WriteLine("Custom tax brackets cleared.");
             }
             else

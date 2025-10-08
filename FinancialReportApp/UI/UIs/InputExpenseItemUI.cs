@@ -13,10 +13,12 @@ namespace FinancialReportApp.UI.UIs
     internal class InputExpenseItemUI : UIBase
     {
         private readonly IInputHandler inputHandler;
+        private readonly IUserData userData;
 
-        public InputExpenseItemUI(IUserInterface userInterface, IInputHandler inputHandler) : base(userInterface)
+        public InputExpenseItemUI(IUserInterface userInterface, IInputHandler inputHandler, IUserData userData) : base(userInterface)
         {
             this.inputHandler = inputHandler;
+            this.userData = userData;
         }
 
         public override void Display()
@@ -25,7 +27,7 @@ namespace FinancialReportApp.UI.UIs
             decimal amount = inputHandler.PromptDecimal("Enter expense amount: ");
             TimeFrequency frequency = inputHandler.PromptEnum<TimeFrequency>("Enter expense frequency (e.g., Monthly, Weekly): ");
 
-            UIController.Instance.UserInputData.AddExpense(catagory, amount, frequency);
+            userData.AddExpense(catagory, amount, frequency);
         }
     }
 }

@@ -7,36 +7,36 @@ using System.Threading.Tasks;
 
 namespace FinancialReportApp.Systems
 {
-    internal class ReportGenerator
+    public interface IReportGenerator
     {
-        private static ReportGenerator instance;
-        public static ReportGenerator Instance
+        void ProcessData();
+        string GenerateReport();
+    }
+
+    public class ReportGenerator : IReportGenerator
+    {
+        private readonly IUserData userData;
+        private readonly ITaxSystem taxSystem;
+
+        public ReportGenerator(IUserData userData, ITaxSystem taxSystem)
         {
-            get
-            {
-                if (instance == null)
-                {
-                    instance = new ReportGenerator();
-                }
-                return instance;
-            }
+            this.userData = userData;
+            this.taxSystem = taxSystem;
         }
 
         private ReportData reportData = new ReportData();
 
         public void ProcessData()
         {
-            var userData = UIController.Instance.UserInputData;
-
             reportData.AnnualSalary = CalculateAnnualAmount(userData.Salary, userData.SalaryFrequency);
             reportData.MonthlySalary = reportData.AnnualSalary / 12;
             reportData.WeeklySalary = reportData.AnnualSalary / 52;
 
-            reportData.AnnualTax = CalculateTax(reportData.AnnualSalary);
+            reportData.AnnualTax = taxSystem.CalculateTax(reportData.AnnualSalary);
             reportData.MonthlyTax = reportData.AnnualTax / 12;
             reportData.WeeklyTax = reportData.AnnualTax / 52;
 
-            reportData.AnnualTaxCredits = TaxSystem.Instance.taxCredits.Sum();
+            reportData.AnnualTaxCredits = userData.TaxCredits.Sum();
             reportData.MonthlyTaxCredits = reportData.AnnualTaxCredits / 12;
             reportData.WeeklyTaxCredits = reportData.AnnualTaxCredits / 52;
 
@@ -61,39 +61,6 @@ namespace FinancialReportApp.Systems
             }
             reportData.TotalMonthlyExpense = reportData.TotalAnnualExpense / 12;
             reportData.TotalWeeklyExpense = reportData.TotalAnnualExpense / 52;
-        }
-
-        private decimal CalculateTax(decimal yearlyIncome)
-        {
-            if(TaxSystem.Instance.useCustomTax)
-            {
-                return 0;
-            }
-
-            decimal taxOwed = 0;
-
-            foreach (var bracket in TaxSystem.Instance.defaultTaxBracketList)
-            {
-                if(yearlyIncome > bracket.LowerBoundary)
-                {
-                    decimal incomeInBracket;
-                    if(bracket.UpperBoundary.HasValue && yearlyIncome > bracket.UpperBoundary.Value)
-                    {
-                        incomeInBracket = Math.Min(yearlyIncome, bracket.UpperBoundary.Value) - bracket.LowerBoundary;
-                    }
-                    else
-                    {
-                        incomeInBracket = yearlyIncome - bracket.LowerBoundary;
-                    }
-                    taxOwed += incomeInBracket * (bracket.Rate / 100);
-                }
-                else
-                {
-                    break;
-                }
-            }
-
-            return taxOwed;
         }
 
         private decimal CalculateAnnualAmount(decimal salary, Util.TimeFrequency frequency)
