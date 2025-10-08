@@ -56,6 +56,7 @@ namespace FinancialReportApp
             services.AddSingleton<IUserInterface, ConsoleUserInterface>();
             services.AddSingleton<IUIRegistry, UIRegistry>();
             services.AddSingleton<IInputHandler, InputHandler>();
+            services.AddSingleton<IUIFlowController, UIFlowController>();
 
             UIRegistration.RegisterUIs(services);
 
@@ -69,8 +70,8 @@ namespace FinancialReportApp
             //Build hierarchy
             registry.BuildMenuHierarchy();
 
-            var mainMenu = provider.GetRequiredService<MainMenu>();
-            mainMenu.Display();
+            var flow = provider.GetRequiredService<IUIFlowController>();
+            flow.NavigateTo(typeof(MainMenu));
         }
     }
 }

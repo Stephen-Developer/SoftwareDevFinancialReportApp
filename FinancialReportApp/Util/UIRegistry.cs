@@ -23,11 +23,14 @@ namespace FinancialReportApp.Util
     public class UIRegistry : IUIRegistry
     {
         private readonly IServiceProvider provider;
+        private readonly IUIFlowController flowController;
+
         private readonly List<UIDescriptor> descriptors = new();
 
-        public UIRegistry(IServiceProvider provider)
+        public UIRegistry(IServiceProvider provider, IUIFlowController flowController)
         {
             this.provider = provider;
+            this.flowController = flowController;
         }
 
         public T Get<T>() where T : UI.UIBase
@@ -84,7 +87,11 @@ namespace FinancialReportApp.Util
                     if (childInstance is IDisplayableUI ui)
                     {
                         // Allow any screen (menu or simple UI) to be registered
-                        parentMenu.AddMenuAction(descriptor.Label, ui.Display, descriptor.Order);
+                        parentMenu.AddMenuAction(
+                            descriptor.Label, 
+                            () => flowController.NavigateTo(descriptor.Type), 
+                            descriptor.Order
+                            );
                     }
                     else
                     {
