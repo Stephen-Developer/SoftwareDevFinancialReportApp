@@ -22,7 +22,6 @@ namespace FinancialReportApp.Util
 
         //Tax and tax credits
         bool UseCustomTax { get; set; }
-        IReadOnlyList<TaxBracket> DefaultTaxBrackets { get; }
         IReadOnlyList<TaxBracket> CustomTaxBrackets { get; }
         IReadOnlyList<decimal> TaxCredits { get; }
         void AddTaxBracket(decimal lowerBoundary, decimal? upperBoundary, decimal rate);
@@ -38,11 +37,6 @@ namespace FinancialReportApp.Util
     public class UserData : IUserData
     {
         private readonly List<Expense> expenses = new List<Expense>();
-        private readonly List<TaxBracket> defaultTaxBrackets = new List<TaxBracket>
-        {
-            new TaxBracket (0, 20, 20),
-            new TaxBracket (20, null, 40)
-        };
         private readonly List<TaxBracket> customTaxBrackets = new List<TaxBracket>();
         private readonly List<decimal> taxCredits = new List<decimal>();
 
@@ -53,8 +47,6 @@ namespace FinancialReportApp.Util
         public IReadOnlyList<Expense> Expenses => expenses.AsReadOnly();
 
         public bool UseCustomTax { get; set; }
-
-        public IReadOnlyList<TaxBracket> DefaultTaxBrackets => defaultTaxBrackets.AsReadOnly();
 
         public IReadOnlyList<TaxBracket> CustomTaxBrackets => customTaxBrackets.AsReadOnly();
 
