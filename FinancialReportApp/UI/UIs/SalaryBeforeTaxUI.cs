@@ -1,0 +1,39 @@
+﻿using FinancialReportApp.Systems;
+using FinancialReportApp.UI.Menus;
+using FinancialReportApp.Util;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace FinancialReportApp.UI
+{
+    [Menu("Input salary before tax", typeof(InputSalaryMenu))]
+    internal class SalaryBeforeTaxUI : UIBase
+    {
+        private const string salaryText = "Enter your salary before tax: ";
+        
+        private readonly IUIRegistry registry;
+        private readonly IInputHandler inputHandler;
+        private readonly IUserData userData;
+
+        public SalaryBeforeTaxUI(IUserInterface userInterface, IUIRegistry registry, IInputHandler inputHandler, IUserData userData) : base(userInterface)
+        {
+            this.registry = registry;
+            this.inputHandler = inputHandler;
+            this.userData = userData;
+        }
+
+        public override void Display()
+        {
+            userInterface.Clear();
+            userData.Salary = inputHandler.PromptDecimal(salaryText);
+            userData.IsSalaryBeforeTax = true;
+
+            registry.Get<SalaryFrequencyMenu>().Display();
+
+            registry.Get<TaxCreditMenu>().Display();
+        }
+    }
+}

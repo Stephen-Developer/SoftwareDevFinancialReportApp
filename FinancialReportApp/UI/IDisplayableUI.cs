@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace FinancialReportApp.UI
 {
-    abstract class UI
+    public interface IDisplayableUI
     {
-        public abstract void Display();
+        void Display();
     }
 }

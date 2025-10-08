@@ -1,5 +1,9 @@
 ﻿using FinancialReportApp.Systems;
 using FinancialReportApp.UI;
+using FinancialReportApp.UI.Menus;
+using FinancialReportApp.UI.UIs;
+using FinancialReportApp.Util;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace FinancialReportApp
 {
@@ -46,8 +50,31 @@ namespace FinancialReportApp
 
         static void Main(string[] args)
         {
-            UIController uIController = new UIController();
-            UIController.Instance.Start();
+            var services = new ServiceCollection();
+
+            // Core systems
+            services.AddSingleton<IUserInterface, ConsoleUserInterface>();
+            services.AddSingleton<IUIRegistry, UIRegistry>();
+            services.AddSingleton<IInputHandler, InputHandler>();
+            services.AddSingleton<IUIFlowController, UIFlowController>();
+            services.AddSingleton<IUserData, UserData>();
+            services.AddSingleton<ITaxSystem, TaxSystem>();
+            services.AddSingleton<IReportGenerator, ReportGenerator>();
+
+            UIRegistration.RegisterUIs(services);
+
+            //Registry
+            var provider = services.BuildServiceProvider();
+            var registry = provider.GetRequiredService<IUIRegistry>();
+
+            //Set up hierarchy
+            UIRegistration.RegisterMenuHierarchy(registry);
+
+            //Build hierarchy
+            registry.BuildMenuHierarchy();
+
+            var flow = provider.GetRequiredService<IUIFlowController>();
+            flow.NavigateTo(typeof(MainMenu));
         }
     }
 }
