@@ -18,9 +18,7 @@ namespace FinancialReportApp.UI.Menus
 
         public MainMenu(IUserInterface userInterface, IUIRegistry registry) : base(userInterface, startText, endText, errorText)
         {
-            int maxOrder = registry.GetAllUIs()
-                .Where(d => d.ParentType == typeof(MainMenu)).Count();
-
+            int maxOrder = registry.GetMaxOrderForParent<MainMenu>();
 #if DEBUG
             AddMenuAction("Add Debug Values", AddDebugValues, ++maxOrder);
             AddMenuAction("Add Debug Tax Brackets", AddDebugTaxBrackets, ++maxOrder);

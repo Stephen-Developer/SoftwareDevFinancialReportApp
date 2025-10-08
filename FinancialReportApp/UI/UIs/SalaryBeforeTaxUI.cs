@@ -25,7 +25,7 @@ namespace FinancialReportApp.UI
 
         public override void Display()
         {
-            Console.Clear();
+            userInterface.Clear();
             UIController.Instance.UserInputData.Salary = inputHandler.PromptDecimal(salaryText);
             UIController.Instance.UserInputData.IsSalaryBeforeTax = true;
 

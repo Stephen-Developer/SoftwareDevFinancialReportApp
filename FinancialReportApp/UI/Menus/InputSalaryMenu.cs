@@ -17,9 +17,7 @@ namespace FinancialReportApp.UI.Menus
 
         public InputSalaryMenu(IUserInterface userInterface, IUIRegistry registry) : base(userInterface, startText, endText, errorText)
         {
-            int maxOrder = registry.GetAllUIs()
-                .Where(d => d.ParentType == typeof(InputSalaryMenu)).Count();
-
+            int maxOrder = registry.GetMaxOrderForParent<InputSalaryMenu>();
             AddMenuAction(BACK, Exit, ++maxOrder);
         }
     }

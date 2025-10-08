@@ -13,6 +13,7 @@ namespace FinancialReportApp.Util
         T Get<T>() where T : UI.UIBase;
         IEnumerable<UIDescriptor> GetAllUIs();    
         IEnumerable<UIDescriptor> GetAllUIsForType<TParent>();
+        int GetMaxOrderForParent<TParent>();
         void RegisterMenu(string label, Type uiType, Type parentType = null); 
         void RegisterMenu(string label, Type menuType, int order, Type parentMenuType = null);
         void BuildMenuHierarchy();
@@ -97,6 +98,11 @@ namespace FinancialReportApp.Util
         public object Resolve(Type uiType)
         {
             return provider.GetRequiredService(uiType);
+        }
+
+        public int GetMaxOrderForParent<TParent>()
+        {
+            return descriptors.Count(d => d.ParentType == typeof(TParent));
         }
     }
 }

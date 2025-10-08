@@ -13,6 +13,7 @@ namespace FinancialReportApp.UI
         public static readonly List<(Type type, Type? parent)> Hierarchy = new()
         {
             (typeof(MainMenu), null),
+
             //Main Menu
             (typeof(InputSalaryMenu), typeof(MainMenu)),
             (typeof(InputExpensesMenu), typeof(MainMenu)),
@@ -25,6 +26,9 @@ namespace FinancialReportApp.UI
             (typeof(TaxCreditMenu), typeof(InputSalaryMenu)),
 
             //InputExpensesMenu
+            (typeof(InputExpenseItemUI), typeof(InputExpensesMenu)),
+            (typeof(RemoveExpenseItemUI), typeof(InputExpensesMenu)),
+            (typeof(ViewExpensesUI), typeof(InputExpensesMenu)),
 
             //InputCustomTaxMenu
             (typeof(InputCustomTaxUI), typeof(InputCustomTaxMenu)),
@@ -32,9 +36,10 @@ namespace FinancialReportApp.UI
             (typeof(ViewCustomTaxUI), typeof(InputCustomTaxMenu)),
 
             //InputTaxCreditMenu
-
-            //SalaryFrequencyMenu
-
+            (typeof(InputTaxCreditUI), typeof(TaxCreditMenu)),
+            (typeof(RemoveTaxCreditUI), typeof(TaxCreditMenu)),
+            (typeof(ClearTaxCreditsUI), typeof(TaxCreditMenu)),
+            (typeof(ViewTaxCreditsUI), typeof(TaxCreditMenu)),
         };
     }
 }

@@ -15,81 +15,10 @@ namespace FinancialReportApp.UI.Menus
         private const string endText = "Option: ";
         private const string errorText = "Invalid option number.";
 
-        private IInputHandler inputHandler;
-
-        public TaxCreditMenu(IUserInterface userInterface, IInputHandler inputHandler) : base(userInterface, startText, endText, errorText)
+        public TaxCreditMenu(IUserInterface userInterface, IUIRegistry registry) : base(userInterface, startText, endText, errorText)
         {
-            AddMenuAction("Input Tax Credit", InputTaxCredit);
-            AddMenuAction("Remove Tax Credit", RemoveTaxCredit);
-            AddMenuAction("Clear Tax Credits", ClearTaxCredits);
-            AddMenuAction("View Current Tax Credits", ViewTaxCreditAmount);
-            AddMenuAction(BACK, () => exit = true);
-
-            this.inputHandler = inputHandler;
-        }
-
-        private void InputTaxCredit()
-        {
-            Console.Clear();
-            Console.Write("Input tax credit/deductable: ");
-            decimal credit = inputHandler.PromptDecimal("Input tax credit/deductable: ", 0);
-
-            TaxSystem.Instance.taxCredits.Add(credit);
-        }
-
-        private void RemoveTaxCredit()
-        {
-            var credits = TaxSystem.Instance.taxCredits;
-            if (credits.Count == 0)
-            {
-                Console.WriteLine("No credits to remove.");
-                Console.ReadLine();
-                return;
-            }
-            Console.WriteLine("Current credits:");
-            for (int i = 0; i < credits.Count; i++)
-            {
-                var exp = credits[i];
-                Console.WriteLine($"{i + 1}. {exp})");
-            }
-            int index = inputHandler.PromptInt("Enter the number of the credits to remove: ") - 1;
-            if (index >= 0 && index < credits.Count)
-            {
-                TaxSystem.Instance.taxCredits.RemoveAt(index);
-                Console.WriteLine("Expense removed.");
-            }
-            else
-            {
-                Console.WriteLine("Invalid index.");
-            }
-        }
-
-        private void ClearTaxCredits()
-        {
-            Console.Clear();
-            var clearTaxCredits = inputHandler.PromptYesNo("Are you sure you want to clear all tax credits?");
-            if(clearTaxCredits)
-            {
-                Console.WriteLine("All tax credits cleared.");
-                TaxSystem.Instance.taxCredits.Clear();
-            }
-            else
-            {
-                Console.WriteLine("Tax credits not cleared.");
-            }
-            Console.ReadLine();
-        }
-
-        private void ViewTaxCreditAmount()
-        {
-            Console.Clear();
-            decimal totalCredits = TaxSystem.Instance.taxCredits.Sum();
-            Console.WriteLine($"Total Tax Credits: {totalCredits:C}");
-            foreach(var credit in TaxSystem.Instance.taxCredits)
-            {
-                Console.WriteLine($" - {credit:C}");
-            }
-            Console.ReadLine();
+            int maxOrder = registry.GetMaxOrderForParent<TaxCreditMenu>();
+            AddMenuAction(BACK, Exit, ++maxOrder);
         }
     }
 }
