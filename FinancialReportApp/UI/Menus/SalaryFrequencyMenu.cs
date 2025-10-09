@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace FinancialReportApp.UI.Menus
 {
-    [Menu("Select Salary Frequency", default)]
+    [Menu("Select Salary Frequency")]
     internal class SalaryFrequencyMenu : Menu
     {
         private const string startText = "Select Salary Frequency:";
@@ -19,6 +19,8 @@ namespace FinancialReportApp.UI.Menus
 
         public SalaryFrequencyMenu(IUserInterface userInterface, IUserData userData) : base(userInterface,startText, endText, errorText)
         {
+            this.userData = userData;
+
             AddMenuAction(TimeFrequency.Weekly.ToString(), () => SelectFrequency(TimeFrequency.Weekly));
             AddMenuAction(TimeFrequency.Monthly.ToString(), () => SelectFrequency(TimeFrequency.Monthly));
             AddMenuAction(TimeFrequency.Yearly.ToString(), () => SelectFrequency(TimeFrequency.Yearly));

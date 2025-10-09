@@ -14,8 +14,8 @@ namespace FinancialReportApp.Util
         IEnumerable<UIDescriptor> GetAllUIs();    
         IEnumerable<UIDescriptor> GetAllUIsForType<TParent>();
         int GetMaxOrderForParent<TParent>();
-        void RegisterMenu(string label, Type uiType, Type parentType = null); 
-        void RegisterMenu(string label, Type menuType, int order, Type parentMenuType = null);
+        void RegisterMenu(string label, Type uiType, Type? parentType = null); 
+        void RegisterMenu(string label, Type menuType, int order, Type? parentMenuType = null);
         void BuildMenuHierarchy();
         object Resolve(Type uiType);
     }
@@ -53,13 +53,13 @@ namespace FinancialReportApp.Util
             .OrderBy(d => d.Order);
         }
 
-        public void RegisterMenu(string label, Type uiType, Type parentType = null)
+        public void RegisterMenu(string label, Type uiType, Type? parentType = null)
         {
             var order = descriptors.Count(d => d.ParentType == parentType);
             RegisterMenu(label, uiType, order + 1, parentType);
         }
 
-        public void RegisterMenu(string label, Type uiType, int order, Type parentMenuType = null)
+        public void RegisterMenu(string label, Type uiType, int order, Type? parentMenuType = null)
         {
             if (!typeof(IDisplayableUI).IsAssignableFrom(uiType))
                 throw new ArgumentException($"{uiType.Name} must implement IDisplayableUI");
