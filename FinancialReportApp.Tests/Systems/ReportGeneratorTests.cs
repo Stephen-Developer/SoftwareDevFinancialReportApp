@@ -18,7 +18,7 @@ namespace FinancialReportApp.Tests.Systems
         [TestInitialize]
         public void Setup()
         {
-            mockUserData = new Moq.Mock<Util.IUserData>();
+            mockUserData = new Moq.Mock<IUserData>();
             mockTaxSystem = new Moq.Mock<FinancialReportApp.Systems.ITaxSystem>();
         }
 
@@ -27,8 +27,8 @@ namespace FinancialReportApp.Tests.Systems
         {
             mockUserData.SetupGet(u => u.Salary).Returns(60000);
             mockUserData.SetupGet(u => u.IsSalaryBeforeTax).Returns(true);
-            mockUserData.SetupGet(u => u.SalaryFrequency).Returns(Util.TimeFrequency.Yearly);
-            mockUserData.SetupGet(u => u.Expenses).Returns(new List<Util.Expense>());
+            mockUserData.SetupGet(u => u.SalaryFrequency).Returns(TimeFrequency.Yearly);
+            mockUserData.SetupGet(u => u.Expenses).Returns(new List<Expense>());
             mockUserData.SetupGet(u => u.TaxCredits).Returns(new List<decimal> { 3300 });
             mockTaxSystem.Setup(t => t.CalculateTax(60000)).Returns(13000);
             
@@ -69,7 +69,7 @@ namespace FinancialReportApp.Tests.Systems
 
             mockUserData.SetupGet(u => u.Salary).Returns(60000);
             mockUserData.SetupGet(u => u.IsSalaryBeforeTax).Returns(true);
-            mockUserData.SetupGet(u => u.SalaryFrequency).Returns(Util.TimeFrequency.Yearly);
+            mockUserData.SetupGet(u => u.SalaryFrequency).Returns(TimeFrequency.Yearly);
             mockUserData.SetupGet(u => u.Expenses).Returns(expenses);
             mockUserData.SetupGet(u => u.TaxCredits).Returns(new List<decimal> { 3300 });
             mockTaxSystem.Setup(t => t.CalculateTax(60000)).Returns(13000);
@@ -103,8 +103,8 @@ namespace FinancialReportApp.Tests.Systems
         {
             mockUserData.SetupGet(u => u.Salary).Returns(60000);
             mockUserData.SetupGet(u => u.IsSalaryBeforeTax).Returns(true);
-            mockUserData.SetupGet(u => u.SalaryFrequency).Returns(Util.TimeFrequency.Yearly);
-            mockUserData.SetupGet(u => u.Expenses).Returns(new List<Util.Expense>());
+            mockUserData.SetupGet(u => u.SalaryFrequency).Returns(TimeFrequency.Yearly);
+            mockUserData.SetupGet(u => u.Expenses).Returns(new List<Expense>());
             mockUserData.SetupGet(u => u.TaxCredits).Returns(new List<decimal> { 3300 });
             mockTaxSystem.Setup(t => t.CalculateTax(60000)).Returns(13000);
 
@@ -122,8 +122,8 @@ namespace FinancialReportApp.Tests.Systems
         {
             mockUserData.SetupGet(u => u.Salary).Returns(60000);
             mockUserData.SetupGet(u => u.IsSalaryBeforeTax).Returns(true);
-            mockUserData.SetupGet(u => u.SalaryFrequency).Returns(Util.TimeFrequency.Yearly);
-            mockUserData.SetupGet(u => u.Expenses).Returns(new List<Util.Expense>());
+            mockUserData.SetupGet(u => u.SalaryFrequency).Returns(TimeFrequency.Yearly);
+            mockUserData.SetupGet(u => u.Expenses).Returns(new List<Expense>());
             mockUserData.SetupGet(u => u.TaxCredits).Returns(new List<decimal> { 3300 });
             mockTaxSystem.Setup(t => t.CalculateTax(60000)).Returns(13000);
             

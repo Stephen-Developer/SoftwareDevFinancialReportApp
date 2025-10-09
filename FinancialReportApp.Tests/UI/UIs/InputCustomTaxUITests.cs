@@ -58,8 +58,8 @@ namespace FinancialReportApp.Tests.UI.UIs
             userInterface.Verify(u => u.WriteLine("Custom Tax Bracket starting point: 0"), Times.Once);
             userInterface.Verify(u => u.WriteLine("Custom Tax Bracket starting point: 30000"), Times.Once);
             userInterface.Verify(u => u.WriteLine("Custom Tax Bracket starting point: 60000"), Times.Once);
-            inputHandler.Verify(i => i.PromptNullableDecimal("Enter upper boundary (or leave blank for no upper limit): ", 0, 30000), Times.Once);
-            inputHandler.Verify(i => i.PromptNullableDecimal("Enter upper boundary (or leave blank for no upper limit): ", 30000, 60000), Times.Once);
+            inputHandler.Verify(i => i.PromptNullableDecimal("Enter upper boundary (or leave blank for no upper limit): ", 0, decimal.MaxValue), Times.Once);
+            inputHandler.Verify(i => i.PromptNullableDecimal("Enter upper boundary (or leave blank for no upper limit): ", 30000, decimal.MaxValue), Times.Once);
             inputHandler.Verify(i => i.PromptNullableDecimal("Enter upper boundary (or leave blank for no upper limit): ", 60000, decimal.MaxValue), Times.Once);
             inputHandler.Verify(i => i.PromptDecimal("Enter tax rate (as a percentage): ", 0, 100), Times.Exactly(3));
             userData.Verify(u => u.AddTaxBracket(0, 30000, 0.20m), Times.Once);
