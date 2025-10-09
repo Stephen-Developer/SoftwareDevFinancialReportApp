@@ -133,11 +133,22 @@ namespace FinancialReportApp.Tests.Systems
 
             mockTaxSystem.Verify(t => t.CalculateTax(60000), Times.Once);
 
-            Assert.IsTrue(report.Contains("Salary: £60,000.00 annually"));
-            Assert.IsTrue(report.Contains("Tax: £13,000.00 annually"));
-            Assert.IsTrue(report.Contains("Tax Credits: £3,300.00 annually"));
-            Assert.IsTrue(report.Contains("Net Income: £50,300.00 annually"));
-            Assert.IsTrue(report.Contains("Total Expenses: £0.00 annually"));
+            Assert.IsTrue(report.Contains("Yearly Salary before tax: £60,000.00"));
+            Assert.IsTrue(report.Contains("Yearly tax: £13,000.00"));
+            Assert.IsTrue(report.Contains("Yearly tax credits: £3,300.00"));
+            Assert.IsTrue(report.Contains("Yearly net: £50,300.00"));
+            Assert.IsTrue(report.Contains("Total Yearly expenses: £0.00"));
+            Assert.IsTrue(report.Contains("Monthly Salary before tax: £5,000.00"));
+            Assert.IsTrue(report.Contains("Monthly tax: £1,083.33"));
+            Assert.IsTrue(report.Contains("Monthly tax credits: £275.00"));
+            Assert.IsTrue(report.Contains("Monthly net: £4,191.67"));
+            Assert.IsTrue(report.Contains("Total Monthly expenses: £0.00"));
+            Assert.IsTrue(report.Contains("Weekly Salary before tax: £1,153.85"));
+            Assert.IsTrue(report.Contains("Weekly tax: £250.00"));
+            Assert.IsTrue(report.Contains("Weekly tax credits: £63.46"));
+            Assert.IsTrue(report.Contains("Weekly net: £967.31"));
+            Assert.IsTrue(report.Contains("Total Weekly expenses: £0.00"));
+
         }
     }
 }

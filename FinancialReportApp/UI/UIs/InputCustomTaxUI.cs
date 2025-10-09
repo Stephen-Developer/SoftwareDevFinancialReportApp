@@ -12,23 +12,22 @@ namespace FinancialReportApp.UI.UIs
     [Menu("Input custom tax brackets", typeof(InputCustomTaxMenu))]
     internal class InputCustomTaxUI : UIBase
     {
-        private readonly IUIRegistry registry;
         private readonly IInputHandler inputHandler;
         private readonly IUserData userData;
+        private readonly IUIFlowController flowController;
 
-        public InputCustomTaxUI(IUIRegistry registry, IUserInterface userInterface, IInputHandler inputHandler, IUserData userData) : base(userInterface)
+        public InputCustomTaxUI(IUserInterface userInterface, IInputHandler inputHandler, IUserData userData, IUIFlowController flowController) : base(userInterface)
         {
-            this.registry = registry;
             this.inputHandler = inputHandler;
             this.userData = userData;
+            this.flowController = flowController;
         }
 
         public override void Display()
         {
-            registry.Get<ClearCustomTaxUI>().Display();
-            var exit = false;
-
-            while (!exit)
+            flowController.NavigateTo(typeof(ClearCustomTaxUI));
+            
+            while (true)
             {
                 userInterface.Clear();
                 decimal lowerLimit = userData.CustomTaxBrackets.Count == 0 ? 0 : userData.CustomTaxBrackets.Last().UpperBoundary.Value;
@@ -38,7 +37,7 @@ namespace FinancialReportApp.UI.UIs
 
                 userData.AddTaxBracket(lowerLimit, upperLimit, rate / 100);
 
-                if (userData.CustomTaxBrackets.LastOrDefault().UpperBoundary == null)
+                if (upperLimit == null)
                 {
                     userInterface.WriteLine("The last tax bracket has no upper limit. Unable to add more brackets.");
                     userInterface.WaitForKey();
