@@ -24,7 +24,6 @@ namespace FinancialReportApp.UI.UIs
         public override void Display()
         {
             userInterface.Clear();
-            userInterface.Write("Input tax credit/deductable: ");
             decimal credit = inputHandler.PromptDecimal("Input tax credit/deductable: ", 0);
 
             userData.AddTaxCredit(credit);

@@ -32,8 +32,6 @@ namespace FinancialReportApp.UI
             userData.IsSalaryBeforeTax = true;
 
             flowController.NavigateTo(typeof(SalaryFrequencyMenu));
-
-            flowController.NavigateTo(typeof(TaxCreditMenu));
         }
     }
 }

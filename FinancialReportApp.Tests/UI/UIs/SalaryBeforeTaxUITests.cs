@@ -45,7 +45,6 @@ namespace FinancialReportApp.Tests.UI.UIs
             mockUserData.VerifySet(ud => ud.Salary = expectedSalary, Times.Once);
             mockUserData.VerifySet(ud => ud.IsSalaryBeforeTax = true, Times.Once);
             mockFlowController.Verify(fc => fc.NavigateTo(typeof(SalaryFrequencyMenu)), Times.Once);
-            mockFlowController.Verify(fc => fc.NavigateTo(typeof(TaxCreditMenu)), Times.Once);
         }
     }
 }
