@@ -60,6 +60,7 @@ namespace FinancialReportApp
             services.AddSingleton<IUserData, UserData>();
             services.AddSingleton<ITaxSystem, TaxSystem>();
             services.AddSingleton<IReportGenerator, ReportGenerator>();
+            services.AddSingleton<IFileService, FileService>();
 
             UIRegistration.RegisterUIs(services);
 

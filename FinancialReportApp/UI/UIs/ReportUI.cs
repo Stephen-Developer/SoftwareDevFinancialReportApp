@@ -16,11 +16,13 @@ namespace FinancialReportApp.UI.UIs
 
         private readonly IInputHandler inputHandler;
         private readonly IReportGenerator reportGenerator;
+        private readonly IFileService fileService;
 
-        public ReportUI(IUserInterface userInterface, IInputHandler inputHandler, IReportGenerator reportGenerator) : base(userInterface)
+        public ReportUI(IUserInterface userInterface, IInputHandler inputHandler, IReportGenerator reportGenerator, IFileService fileService) : base(userInterface)
         {
             this.inputHandler = inputHandler;
             this.reportGenerator = reportGenerator;
+            this.fileService = fileService;
         }
 
         public override void Display()
@@ -33,23 +35,23 @@ namespace FinancialReportApp.UI.UIs
             userInterface.Clear();
 
             var writeReport = inputHandler.PromptYesNo("Would you like to write the report to a file?");
-            //TODO: Look into abstracting file writing to a service
-            if (writeReport)
-            {
-                var exeDirectory = AppDomain.CurrentDomain.BaseDirectory;
-                var outputPath = Path.Combine(exeDirectory, outputFileName);
 
-                var writeSuccess= FileUtils.WriteToFile(report, outputPath);
-                if(writeSuccess)
-                {
-                    userInterface.WriteLine($"Report written to {outputPath}");
-                }
-                else
-                {
-                    userInterface.WriteLine($"Failed to write report to {outputPath}");
-                }
-                userInterface.ReadLine();
+            if (!writeReport)   
+                return;
+
+            var exeDirectory = fileService.GetAppDirectory();
+            var outputPath = Path.Combine(exeDirectory, outputFileName);
+
+            var writeSuccess = fileService.TryWriteFile(outputPath, report);
+            if (writeSuccess)
+            {
+                userInterface.WriteLine($"Report written to {outputPath}");
             }
+            else
+            {
+                userInterface.WriteLine($"Failed to write report to {outputPath}");
+            }
+            userInterface.WaitForKey();
         }
     }
 }

@@ -19,6 +19,7 @@ namespace FinancialReportApp.Tests.UI.UIs
         Mock<IUserInterface> mockUserInterface;
         Mock<IInputHandler> mockInputHandler;
         Mock<IReportGenerator> mockReportGenerator;
+        Mock<IFileService> mockFileService;
 
         [TestInitialize]
         public void Setup()
@@ -26,8 +27,9 @@ namespace FinancialReportApp.Tests.UI.UIs
             mockUserInterface = new Mock<IUserInterface>();
             mockInputHandler = new Mock<IInputHandler>();
             mockReportGenerator = new Mock<IReportGenerator>();
+            mockFileService = new Mock<IFileService>();
 
-            ui = new ReportUI(mockUserInterface.Object, mockInputHandler.Object, mockReportGenerator.Object);
+            ui = new ReportUI(mockUserInterface.Object, mockInputHandler.Object, mockReportGenerator.Object, mockFileService.Object);
         }
 
         [TestMethod]
@@ -47,6 +49,20 @@ namespace FinancialReportApp.Tests.UI.UIs
             mockUserInterface.Verify(ui => ui.WaitForKey(), Times.Once);
             mockUserInterface.Verify(ui => ui.Clear(), Times.Once);
             mockInputHandler.Verify(ih => ih.PromptYesNo("Would you like to write the report to a file?"), Times.Once);
+        }
+
+        [TestMethod]
+        public void Display_WhenWriteReportSelected_SavesFileAndNotifiesUser()
+        {
+            mockReportGenerator.Setup(r => r.GenerateReport()).Returns("REPORT CONTENT");
+            mockInputHandler.Setup(i => i.PromptYesNo(It.IsAny<string>())).Returns(true);
+            mockFileService.Setup(f => f.TryWriteFile(It.IsAny<string>(), "REPORT CONTENT")).Returns(true);
+            mockFileService.Setup(f => f.GetAppDirectory()).Returns("C:\\Temp");
+
+            ui.Display();
+
+            mockFileService.Verify(f => f.TryWriteFile("C:\\Temp\\FinancialReport.txt", "REPORT CONTENT"), Times.Once);
+            mockUserInterface.Verify(u => u.WriteLine(It.Is<string>(s => s.Contains("Report written"))), Times.Once);
         }
     }
 }
