@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36518.9 d17.14
+VisualStudioVersion = 17.14.36518.9
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FinancialReportApp", "FinancialReportApp.csproj", "{DBDD1A41-04C2-46EB-A86C-B22588FAA8FB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FinancialReportApp.Tests", "..\FinancialReportApp.Tests\FinancialReportApp.Tests.csproj", "{684FD1A1-B5D3-4436-AD82-519FAD4A450F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{DBDD1A41-04C2-46EB-A86C-B22588FAA8FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DBDD1A41-04C2-46EB-A86C-B22588FAA8FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DBDD1A41-04C2-46EB-A86C-B22588FAA8FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{684FD1A1-B5D3-4436-AD82-519FAD4A450F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{684FD1A1-B5D3-4436-AD82-519FAD4A450F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{684FD1A1-B5D3-4436-AD82-519FAD4A450F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{684FD1A1-B5D3-4436-AD82-519FAD4A450F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -18,13 +18,16 @@ namespace FinancialReportApp.Systems
         private readonly IUserData userData;
         private readonly ITaxSystem taxSystem;
 
+        private ReportData reportData = new ReportData();
+
+        // Expose ReportData for testing purposes
+        internal ReportData ReportData => reportData;
+
         public ReportGenerator(IUserData userData, ITaxSystem taxSystem)
         {
             this.userData = userData;
             this.taxSystem = taxSystem;
         }
-
-        private ReportData reportData = new ReportData();
 
         public void ProcessData()
         {

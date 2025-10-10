@@ -28,11 +28,12 @@ namespace FinancialReportApp.UI.UIs
             reportGenerator.ProcessData();
             var report = reportGenerator.GenerateReport();
             userInterface.WriteLine(report);
-            userInterface.ReadLine();
+            userInterface.WaitForKey();
 
             userInterface.Clear();
 
             var writeReport = inputHandler.PromptYesNo("Would you like to write the report to a file?");
+            //TODO: Look into abstracting file writing to a service
             if (writeReport)
             {
                 var exeDirectory = AppDomain.CurrentDomain.BaseDirectory;

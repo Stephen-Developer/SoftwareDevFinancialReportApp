@@ -17,9 +17,9 @@ namespace FinancialReportApp.Util
         public string Label { get; }
         public Type Type { get; }
         public int Order { get; }
-        public Type ParentType { get; }
+        public Type? ParentType { get; }
 
-        public UIDescriptor(string label, Type type, int order = 0, Type partentType = null)
+        public UIDescriptor(string label, Type type, int order = 0, Type? partentType = null)
         {
             Label = label;
             Type = type;

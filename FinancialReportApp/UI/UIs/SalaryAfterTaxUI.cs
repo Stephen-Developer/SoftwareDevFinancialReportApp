@@ -15,13 +15,13 @@ namespace FinancialReportApp.UI.UIs
         private const string salaryText = "Enter your salary after tax: ";
         private const string taxText = "Enter the amount of tax paid: ";
 
-        private readonly IUIRegistry registry;
+        private readonly IUIFlowController flowController;
         private readonly IInputHandler inputHandler;
         private readonly IUserData userData;
 
-        public SalaryAfterTaxUI(IUserInterface userInterface, IUIRegistry registry, IInputHandler inputHandler, IUserData userData) : base(userInterface)
+        public SalaryAfterTaxUI(IUserInterface userInterface, IUIFlowController flowController, IInputHandler inputHandler, IUserData userData) : base(userInterface)
         {
-            this.registry = registry;
+            this.flowController = flowController;
             this.inputHandler = inputHandler;
             this.userData = userData;
         }
@@ -32,7 +32,7 @@ namespace FinancialReportApp.UI.UIs
             userData.Salary = inputHandler.PromptDecimal(salaryText);
             userData.IsSalaryBeforeTax = false;
 
-            registry.Get<SalaryFrequencyMenu>().Display();
+            flowController.NavigateTo(typeof(SalaryFrequencyMenu));
 
             userData.TaxPaid = inputHandler.PromptDecimal(taxText);
         }

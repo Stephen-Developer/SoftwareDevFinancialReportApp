@@ -12,12 +12,12 @@ namespace FinancialReportApp.Systems
         decimal CalculateTax(decimal income);
     }
 
-    internal class TaxSystem : ITaxSystem
+    public class TaxSystem : ITaxSystem
     {
         private readonly List<TaxBracket> defaultTaxBracketList = new List<TaxBracket>
         {
-            new TaxBracket (0, 20, 20),
-            new TaxBracket (20, null, 40)
+            new TaxBracket (0, 20000, 20),
+            new TaxBracket (20000, null, 40)
         };
 
         private readonly IUserData userData;
@@ -29,14 +29,11 @@ namespace FinancialReportApp.Systems
 
         public decimal CalculateTax(decimal income)
         {
-            if (userData.UseCustomTax)
-            {
-                return 0;
-            }
+            var taxBrackets = userData.UseCustomTax ? userData.CustomTaxBrackets : defaultTaxBracketList;
 
             decimal taxOwed = 0;
 
-            foreach (var bracket in defaultTaxBracketList)
+            foreach (var bracket in taxBrackets)
             {
                 if (income > bracket.LowerBoundary)
                 {

@@ -52,7 +52,7 @@ namespace FinancialReportApp.Util
                     continue;
                 }
 
-                if (result <= min || result >= max)
+                if (result < min || result > max)
                 {
                     userInterface.WriteLine($"Input must be between {min} and {max}. Please enter a valid decimal number.");
                     continue;

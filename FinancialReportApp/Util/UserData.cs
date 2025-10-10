@@ -76,7 +76,7 @@ namespace FinancialReportApp.Util
             Salary = 0;
             IsSalaryBeforeTax = true;
             TaxPaid = 0;
-            SalaryFrequency = TimeFrequency.Monthly;
+            SalaryFrequency = default(TimeFrequency);
             ClearExpenses();
             UseCustomTax = false;
             ClearTaxBrackets();

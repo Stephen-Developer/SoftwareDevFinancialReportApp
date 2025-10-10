@@ -34,7 +34,7 @@ namespace FinancialReportApp.UI.UIs
             for (int i = 0; i < credits.Count; i++)
             {
                 var exp = credits[i];
-                userInterface.WriteLine($"{i + 1}. {exp})");
+                userInterface.WriteLine($"{i + 1}. {exp}");
             }
             int index = inputHandler.PromptInt("Enter the number of the credits to remove: ") - 1;
             if (index >= 0 && index < credits.Count)

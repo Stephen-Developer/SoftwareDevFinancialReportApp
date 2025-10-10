@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace FinancialReportApp.UI.Menus
 {
-    [Menu("Main menu", null)]
+    [Menu("Main menu")]
     internal class MainMenu : Menu
     {
         private const string startText = "Please select an option:";

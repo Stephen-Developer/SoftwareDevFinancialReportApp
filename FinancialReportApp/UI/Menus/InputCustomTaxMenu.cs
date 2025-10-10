@@ -16,7 +16,7 @@ namespace FinancialReportApp.UI.Menus
         private const string endText = "Option: ";
         private const string errorText = "Invalid option number.";
 
-        public InputCustomTaxMenu(IUserInterface userInterface, IUIRegistry registry) : base(userInterface, startText, endText, errorText)
+        public InputCustomTaxMenu(IUserInterface userInterface) : base(userInterface, startText, endText, errorText)
         {
             
         }
