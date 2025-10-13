@@ -1,4 +1,5 @@
 ﻿using FinancialReportApp.UI;
+using FinancialReportApp.UI.UIs;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -35,7 +36,10 @@ namespace FinancialReportApp.Util
                 foreach (var (type, parent) in group)
                 {
                     var attr = (MenuAttribute)type.GetCustomAttributes(typeof(MenuAttribute), false).First();
-                    registry.RegisterMenu(attr.Label, type, order++, parent);
+
+                    var displayName = attr.GetLocalizedLabel();
+                    
+                    registry.RegisterMenu(displayName, type, order++, parent);
                 }
             }
         }

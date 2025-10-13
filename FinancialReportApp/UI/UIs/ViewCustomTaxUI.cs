@@ -1,4 +1,5 @@
-﻿using FinancialReportApp.Systems;
+﻿using FinancialReportApp.Resources;
+using FinancialReportApp.Systems;
 using FinancialReportApp.UI.Menus;
 using FinancialReportApp.Util;
 using System;
@@ -9,12 +10,12 @@ using System.Threading.Tasks;
 
 namespace FinancialReportApp.UI.UIs
 {
-    [Menu("View Custom Tax Brackets", typeof(InputCustomTaxMenu))]
+    [Menu(nameof(Strings.ViewCustomTaxUI_Menu), typeof(InputCustomTaxMenu))]
     internal class ViewCustomTaxUI : UIBase
     {
         private IUserData userData;
 
-        public ViewCustomTaxUI(IUserInterface userInterface, IUserData userData) : base(userInterface)
+        public ViewCustomTaxUI(IUserInterface userInterface, ILocaliser localiser, IUserData userData) : base(userInterface, localiser)
         {
             this.userData = userData;
         }
@@ -23,7 +24,8 @@ namespace FinancialReportApp.UI.UIs
         {
             foreach (var taxBracket in userData.CustomTaxBrackets)
             {
-                userInterface.WriteLine($"Range: {taxBracket.LowerBoundary} - {taxBracket.UpperBoundary}. Rate: {taxBracket.Rate}");
+                var message = localiser.Get(nameof(Strings.ViewCustomTaxUI_Message_Bracket), taxBracket.LowerBoundary, taxBracket.UpperBoundary, taxBracket.Rate);
+                userInterface.WriteLine(message);
             }
             userInterface.WaitForKey();
         }

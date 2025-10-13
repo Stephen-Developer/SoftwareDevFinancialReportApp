@@ -1,4 +1,5 @@
-﻿using FinancialReportApp.UI;
+﻿using FinancialReportApp.Resources;
+using FinancialReportApp.UI;
 using FinancialReportApp.UI.UIs;
 using FinancialReportApp.Util;
 using Moq;
@@ -13,12 +14,18 @@ namespace FinancialReportApp.Tests.UI.UIs
     [TestClass]
     public class InputCustomTaxUITests
     {
+        const string lowerText = "Lower";
+        const string upperText = "Upper";
+        const string rateText = "Rate";
+        const string endText = "End";
+
         InputCustomTaxUI ui;
 
         Mock<IUserInterface> userInterface;
         Mock<IInputHandler> inputHandler;
         Mock<IUserData> userData;
         Mock<IUIFlowController> flowController;
+        Mock<ILocaliser> localiser;
 
         [TestInitialize]
         public void Setup()
@@ -27,8 +34,9 @@ namespace FinancialReportApp.Tests.UI.UIs
             inputHandler = new Mock<IInputHandler>();
             userData = new Mock<IUserData>();
             flowController = new Mock<IUIFlowController>();
+            localiser = new Mock<ILocaliser>();
 
-            ui = new InputCustomTaxUI(userInterface.Object, inputHandler.Object, userData.Object, flowController.Object);
+            ui = new InputCustomTaxUI(userInterface.Object, localiser.Object, inputHandler.Object, userData.Object, flowController.Object);
         }
 
         [TestMethod]
@@ -51,21 +59,26 @@ namespace FinancialReportApp.Tests.UI.UIs
                 .Returns(45); // Last rate
             flowController.Setup(f => f.NavigateTo(typeof(ClearCustomTaxUI)));
 
+            localiser.Setup(l => l.Get(nameof(Strings.InputCustomTaxUI_Message_Lower), 0m)).Returns(lowerText);
+            localiser.Setup(l => l.Get(nameof(Strings.InputCustomTaxUI_Message_Lower), 30000m)).Returns(lowerText);
+            localiser.Setup(l => l.Get(nameof(Strings.InputCustomTaxUI_Message_Lower), 60000m)).Returns(lowerText);
+            localiser.Setup(l => l.Get(nameof(Strings.InputCustomTaxUI_Message_Upper))).Returns(upperText);
+            localiser.Setup(l => l.Get(nameof(Strings.InputCustomTaxUI_Message_Rate))).Returns(rateText);
+            localiser.Setup(l => l.Get(nameof(Strings.InputCustomTaxUI_Message_End))).Returns(endText);
+
             ui.Display();
 
             flowController.Verify(f => f.NavigateTo(typeof(ClearCustomTaxUI)), Times.Once);
             userInterface.Verify(u => u.Clear(), Times.Exactly(3));
-            userInterface.Verify(u => u.WriteLine("Custom Tax Bracket starting point: 0"), Times.Once);
-            userInterface.Verify(u => u.WriteLine("Custom Tax Bracket starting point: 30000"), Times.Once);
-            userInterface.Verify(u => u.WriteLine("Custom Tax Bracket starting point: 60000"), Times.Once);
-            inputHandler.Verify(i => i.PromptNullableDecimal("Enter upper boundary (or leave blank for no upper limit): ", 0, decimal.MaxValue), Times.Once);
-            inputHandler.Verify(i => i.PromptNullableDecimal("Enter upper boundary (or leave blank for no upper limit): ", 30000, decimal.MaxValue), Times.Once);
-            inputHandler.Verify(i => i.PromptNullableDecimal("Enter upper boundary (or leave blank for no upper limit): ", 60000, decimal.MaxValue), Times.Once);
-            inputHandler.Verify(i => i.PromptDecimal("Enter tax rate (as a percentage): ", 0, 100), Times.Exactly(3));
+            userInterface.Verify(u => u.WriteLine(lowerText), Times.Exactly(3));
+            inputHandler.Verify(i => i.PromptNullableDecimal(upperText, 0m, decimal.MaxValue), Times.Once);
+            inputHandler.Verify(i => i.PromptNullableDecimal(upperText, 30000m, decimal.MaxValue), Times.Once);
+            inputHandler.Verify(i => i.PromptNullableDecimal(upperText, 60000m, decimal.MaxValue), Times.Once);
+            inputHandler.Verify(i => i.PromptDecimal(rateText, 0, 100), Times.Exactly(3));
             userData.Verify(u => u.AddTaxBracket(0, 30000, 0.20m), Times.Once);
             userData.Verify(u => u.AddTaxBracket(30000, 60000, 0.40m), Times.Once);
             userData.Verify(u => u.AddTaxBracket(60000, null, 0.45m), Times.Once);
-            userInterface.Verify(u => u.WriteLine("The last tax bracket has no upper limit. Unable to add more brackets."), Times.Once);
+            userInterface.Verify(u => u.WriteLine(endText), Times.Once);
         }
     }
 }

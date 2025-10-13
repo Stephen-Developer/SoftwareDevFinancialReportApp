@@ -1,4 +1,5 @@
-﻿using FinancialReportApp.Systems;
+﻿using FinancialReportApp.Resources;
+using FinancialReportApp.Systems;
 using FinancialReportApp.Util;
 using Microsoft.Win32;
 using System;
@@ -9,14 +10,16 @@ using System.Threading.Tasks;
 
 namespace FinancialReportApp.UI.Menus
 {
-    [Menu("Input custom tax brackets", typeof(MainMenu))]
+    [Menu(nameof(Strings.InputCustomTaxMenu_Menu), typeof(MainMenu))]
     internal class InputCustomTaxMenu : Menu
     {
-        private const string startText = "Input Custom Tax Brackets Menu";
-        private const string endText = "Option: ";
-        private const string errorText = "Invalid option number.";
-
-        public InputCustomTaxMenu(IUserInterface userInterface) : base(userInterface, startText, endText, errorText)
+        public InputCustomTaxMenu(IUserInterface userInterface, ILocaliser localiser) 
+            : base(
+                  userInterface, 
+                  localiser, 
+                  localiser.Get(nameof(Strings.InputCustomTaxMenu_Message_Start)), 
+                  null, 
+                  null)
         {
             
         }

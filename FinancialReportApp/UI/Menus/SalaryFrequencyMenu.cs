@@ -1,4 +1,5 @@
-﻿using FinancialReportApp.Systems;
+﻿using FinancialReportApp.Resources;
+using FinancialReportApp.Systems;
 using FinancialReportApp.Util;
 using System;
 using System.Collections.Generic;
@@ -8,16 +9,18 @@ using System.Threading.Tasks;
 
 namespace FinancialReportApp.UI.Menus
 {
-    [Menu("Select Salary Frequency")]
+    [Menu(nameof(Strings.SalaryFrequencyMenu_Menu))]
     internal class SalaryFrequencyMenu : Menu
     {
-        private const string startText = "Select Salary Frequency:";
-        private const string endText = "Option: ";
-        private const string errorText = "Invalid option number.";
-
         private readonly IUserData userData;
 
-        public SalaryFrequencyMenu(IUserInterface userInterface, IUserData userData) : base(userInterface,startText, endText, errorText)
+        public SalaryFrequencyMenu(IUserInterface userInterface, ILocaliser localiser, IUserData userData)
+            : base(
+                  userInterface, 
+                  localiser, 
+                  localiser.Get(Strings.SalaryFrequencyMenu_Message_Start), 
+                  null, 
+                  null)
         {
             this.userData = userData;
 

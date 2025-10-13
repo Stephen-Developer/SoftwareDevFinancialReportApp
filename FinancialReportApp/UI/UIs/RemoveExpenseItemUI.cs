@@ -1,4 +1,5 @@
-﻿using FinancialReportApp.Systems;
+﻿using FinancialReportApp.Resources;
+using FinancialReportApp.Systems;
 using FinancialReportApp.UI.Menus;
 using FinancialReportApp.Util;
 using System;
@@ -9,13 +10,13 @@ using System.Threading.Tasks;
 
 namespace FinancialReportApp.UI.UIs
 {
-    [Menu("Remove expense item", typeof(InputExpensesMenu))]
+    [Menu(nameof(Strings.RemoveExpenseItemUI_Menu), typeof(InputExpensesMenu))]
     internal class RemoveExpenseItemUI : UIBase
     {
         private readonly IInputHandler inputHandler;
         private readonly IUserData userData ;
 
-        public RemoveExpenseItemUI(IUserInterface userInterface, IInputHandler inputHandler, IUserData userData) : base(userInterface)
+        public RemoveExpenseItemUI(IUserInterface userInterface, ILocaliser localiser, IInputHandler inputHandler, IUserData userData) : base(userInterface, localiser)
         {
             this.userInterface = userInterface;
             this.inputHandler = inputHandler;
@@ -24,29 +25,57 @@ namespace FinancialReportApp.UI.UIs
 
         public override void Display()
         {
-            var expenses = userData.Expenses;
-            if (expenses.Count == 0)
+            if (userData.Expenses.Count == 0)
             {
-                userInterface.WriteLine("No expenses to remove.");
-                userInterface.WaitForKey();
+                NoExpensesMessage();
                 return;
             }
-            userInterface.WriteLine("Current Expenses:");
-            for (int i = 0; i < expenses.Count; i++)
+
+            DisplayCurrentExpenses();
+
+            int index = PromptGetIndexToRemove();
+            RemoveIndex(index);
+        }
+
+        private void NoExpensesMessage()
+        {
+            var message = localiser.Get(nameof(Strings.RemoveExpenseItemUI_Message_Nothing));
+            userInterface.WriteLine(message);
+            userInterface.WaitForKey();
+        }
+
+        private void DisplayCurrentExpenses()
+        {
+            var message = localiser.Get(nameof(Strings.RemoveExpenseItemUI_Message_Current));
+            userInterface.WriteLine(message);
+
+            for (int i = 0; i < userData.Expenses.Count; i++)
             {
-                var exp = expenses[i];
+                var exp = userData.Expenses[i];
                 userInterface.WriteLine($"{i + 1}. {exp.Category} - {exp.Amount} ({exp.Frequency})");
             }
-            int index = inputHandler.PromptInt("Enter the number of the expense to remove: ") - 1;
-            if (index >= 0 && index < expenses.Count)
+        }
+
+        private int PromptGetIndexToRemove()
+        {
+            var message = localiser.Get(nameof(Strings.RemoveExpenseItemUI_Prompt_Number));
+            return inputHandler.PromptInt(message) - 1;
+        }
+
+        private void RemoveIndex(int index)
+        {
+            if (index >= 0 && index < userData.Expenses.Count)
             {
                 userData.RemoveExpense(index);
-                userInterface.WriteLine("Expense removed.");
+                var message = localiser.Get(nameof(Strings.RemoveExpenseItemUI_Message_Removed));
+                userInterface.WriteLine(message);
             }
             else
             {
-                userInterface.WriteLine("Invalid index.");
+                var message = localiser.Get(nameof(Strings.RemoveExpenseItemUI_Message_Invalid));
+                userInterface.WriteLine(message);
             }
+            userInterface.WaitForKey();
         }
     }
 }

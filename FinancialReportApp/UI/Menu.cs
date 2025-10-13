@@ -1,4 +1,6 @@
-﻿using System;
+﻿using FinancialReportApp.Resources;
+using FinancialReportApp.Util;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,21 +10,23 @@ namespace FinancialReportApp.UI
 {
     public abstract class Menu : UIBase
     {
-        protected const string BACK = "Back";
-        protected const string EXIT = "Exit";
-
         protected readonly SortedDictionary<int, (string label, Action action)> menuActions = new SortedDictionary<int, (string label, Action action)>();
 
         protected bool exit = false;
+        protected string menuBack;
+        protected string menuExit;
         protected string menuStartText;
         protected string menuEndText;
         protected string menuErrorText;
 
-        protected Menu(IUserInterface userInterface, string startText, string endText, string errorText) : base(userInterface)
+        protected Menu(IUserInterface userInterface, ILocaliser localiser, string? startText, string? endText, string? errorText) : base(userInterface, localiser)
         {
-            menuStartText = startText;
-            menuEndText = endText;
-            menuErrorText = errorText;
+            this.menuBack = localiser.Get(nameof(Strings.Menu_Message_Back));
+            this.menuExit = localiser.Get(nameof(Strings.Menu_Message_Exit));
+
+            menuStartText = startText ?? localiser.Get(nameof(Strings.Menu_Message_Start));
+            menuEndText = endText ?? localiser.Get(nameof(Strings.Menu_Message_End)); ;
+            menuErrorText = errorText ?? localiser.Get(nameof(Strings.Menu_Message_Error)); ;
         }
 
         public void AddMenuAction(string label, Action action, int? order = null)
@@ -40,7 +44,7 @@ namespace FinancialReportApp.UI
                 userInterface.WriteLine(menuStartText);
                 foreach (var item in menuActions)
                 {
-                    userInterface.WriteLine($"{item.Key}. {item.Value.label}");
+                    userInterface.WriteLine(localiser.Get(nameof(Strings.Menu_Message_MenuOption), item.Key, item.Value.label));
                 }
                 userInterface.Write(menuEndText);
                 if (int.TryParse(userInterface.ReadLine(), out int choice) && menuActions.ContainsKey(choice))

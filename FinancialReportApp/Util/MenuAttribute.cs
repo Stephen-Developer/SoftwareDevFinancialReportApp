@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FinancialReportApp.Resources;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,13 +10,19 @@ namespace FinancialReportApp.Util
     [AttributeUsage(AttributeTargets.Class)]
     public class MenuAttribute : Attribute
     {
-        public string Label { get; }
+        public string LabelKey { get; }
         public Type ParentType { get; }
 
-        public MenuAttribute(string label, Type parentType = null)
+        public MenuAttribute(string labelKey, Type parentType = null)
         {
-            Label = label;
+            LabelKey = labelKey;
             ParentType = parentType;
+        }
+
+        public string GetLocalizedLabel()
+        {
+            return Strings.ResourceManager.GetString(LabelKey)
+                   ?? LabelKey;
         }
     }
 }
