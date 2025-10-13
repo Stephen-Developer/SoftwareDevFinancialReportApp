@@ -1,4 +1,5 @@
-﻿using FinancialReportApp.Systems;
+﻿using FinancialReportApp.Resources;
+using FinancialReportApp.Systems;
 using FinancialReportApp.UI.Menus;
 using FinancialReportApp.Util;
 using System;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace FinancialReportApp.UI.UIs
 {
-    [Menu("Generate Report", typeof(MainMenu))]
+    [Menu(nameof(Strings.ReportUI_Menu), typeof(MainMenu))]
     internal class ReportUI : UIBase
     {
         const string outputFileName = "FinancialReport.txt";
@@ -18,7 +19,7 @@ namespace FinancialReportApp.UI.UIs
         private readonly IReportGenerator reportGenerator;
         private readonly IFileService fileService;
 
-        public ReportUI(IUserInterface userInterface, IInputHandler inputHandler, IReportGenerator reportGenerator, IFileService fileService) : base(userInterface)
+        public ReportUI(IUserInterface userInterface, ILocaliser localiser, IInputHandler inputHandler, IReportGenerator reportGenerator, IFileService fileService) : base(userInterface, localiser)
         {
             this.inputHandler = inputHandler;
             this.reportGenerator = reportGenerator;
@@ -34,7 +35,7 @@ namespace FinancialReportApp.UI.UIs
 
             userInterface.Clear();
 
-            var writeReport = inputHandler.PromptYesNo("Would you like to write the report to a file?");
+            var writeReport = PromptWriteReport();
 
             if (!writeReport)   
                 return;
@@ -42,14 +43,27 @@ namespace FinancialReportApp.UI.UIs
             var exeDirectory = fileService.GetAppDirectory();
             var outputPath = Path.Combine(exeDirectory, outputFileName);
 
+            TryWriteFile(outputPath, report);
+        }
+
+        private bool PromptWriteReport()
+        {
+            var message = localiser.Get(nameof(Strings.ReportUI_Prompt_Write));
+            return inputHandler.PromptYesNo(message);
+        }
+
+        private void TryWriteFile(string outputPath, string report)
+        {
             var writeSuccess = fileService.TryWriteFile(outputPath, report);
             if (writeSuccess)
             {
-                userInterface.WriteLine($"Report written to {outputPath}");
+                var message = localiser.Get(nameof(Strings.ReportUI_Message_Success), outputPath);
+                userInterface.WriteLine(message);
             }
             else
             {
-                userInterface.WriteLine($"Failed to write report to {outputPath}");
+                var message = localiser.Get(nameof(Strings.ReportUI_Message_Failure), outputPath);
+                userInterface.WriteLine(message);
             }
             userInterface.WaitForKey();
         }

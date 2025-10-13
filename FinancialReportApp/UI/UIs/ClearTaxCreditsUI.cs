@@ -1,4 +1,5 @@
-﻿using FinancialReportApp.Systems;
+﻿using FinancialReportApp.Resources;
+using FinancialReportApp.Systems;
 using FinancialReportApp.UI.Menus;
 using FinancialReportApp.Util;
 using System;
@@ -9,13 +10,13 @@ using System.Threading.Tasks;
 
 namespace FinancialReportApp.UI.UIs
 {
-    [Menu("Clear Tax Credits", typeof(TaxCreditMenu))]
+    [Menu(nameof(Strings.ClearCustomTaxUI_MenuAttribute), typeof(TaxCreditMenu))]
     internal class ClearTaxCreditsUI : UIBase
     {
         private readonly IInputHandler inputHandler;
         private readonly IUserData userData;
 
-        public ClearTaxCreditsUI(IUserInterface userInterface, IInputHandler inputHandler, IUserData userData) : base(userInterface)
+        public ClearTaxCreditsUI(IUserInterface userInterface, IInputHandler inputHandler, IUserData userData, ILocaliser localiser) : base(userInterface, localiser)
         {
             this.inputHandler = inputHandler;
             this.userData = userData;
@@ -24,17 +25,35 @@ namespace FinancialReportApp.UI.UIs
         public override void Display()
         {
             userInterface.Clear();
-            var clearTaxCredits = inputHandler.PromptYesNo("Are you sure you want to clear all tax credits?");
+            var clearTaxCredits = ClearCustomTaxBracketsPrompt();
             if (clearTaxCredits)
             {
-                userInterface.WriteLine("All tax credits cleared.");
                 userData.ClearTaxCredits();
+                DisplayClearedMessage();
             }
             else
             {
-                userInterface.WriteLine("Tax credits not cleared.");
+                DisplayCancelledMessage();
             }
             userInterface.WaitForKey();
+        }
+
+        private bool ClearCustomTaxBracketsPrompt()
+        {
+            var message = localiser.Get(nameof(Strings.ClearTaxCreditsUI_Prompt));
+            return inputHandler.PromptYesNo(message);
+        }
+
+        private void DisplayClearedMessage()
+        {
+            var message = localiser.Get(nameof(Strings.ClearTaxCreditsUI_Message_Cleared));
+            userInterface.WriteLine(message);
+        }
+
+        private void DisplayCancelledMessage()
+        {
+            var message = localiser.Get(nameof(Strings.ClearTaxCreditsUI_Message_Cancelled));
+            userInterface.WriteLine(message);
         }
     }
 }
