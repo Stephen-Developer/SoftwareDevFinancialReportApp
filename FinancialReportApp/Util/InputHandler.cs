@@ -1,4 +1,5 @@
-﻿using FinancialReportApp.UI;
+﻿using FinancialReportApp.Resources;
+using FinancialReportApp.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,10 +11,27 @@ namespace FinancialReportApp.Util
     internal class InputHandler : IInputHandler
     {
         private readonly IUserInterface userInterface;
+        private readonly ILocaliser localiser;
 
-        public InputHandler(IUserInterface userInterface)
+        private HashSet<string>? yesInputs;
+        private HashSet<string>? noInputs;
+
+        private HashSet<string> YesInputs =>
+            yesInputs ??= LoadInputSet(nameof(Strings_InputHandling.PromptYesNo_YesInputs));
+
+        private HashSet<string> NoInputs =>
+            noInputs ??= LoadInputSet(nameof(Strings_InputHandling.PromptYesNo_NoInputs));
+
+        private HashSet<string> LoadInputSet(string key) =>
+            localiser.Get(key)
+                .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                .Select(s => s.Trim().ToLowerInvariant())
+                .ToHashSet();
+
+        public InputHandler(IUserInterface userInterface, ILocaliser localiser)
         {
             this.userInterface = userInterface;
+            this.localiser = localiser;
         }
 
         public int PromptInt(string message)
@@ -27,7 +45,7 @@ namespace FinancialReportApp.Util
                 {
                     return result;
                 }
-                userInterface.WriteLine("Invalid input. Please enter a valid integer.");
+                userInterface.WriteLine(localiser.Get(nameof(Strings_InputHandling.PromptInt_Invalid)));
             }
         }
 
@@ -48,13 +66,13 @@ namespace FinancialReportApp.Util
 
                 if (!isParsed)
                 {
-                    userInterface.WriteLine("Invalid input. Please enter a valid decimal number.");
+                    userInterface.WriteLine(localiser.Get(nameof(Strings_InputHandling.PromptDecimal_Invalid)));
                     continue;
                 }
 
                 if (result < min || result > max)
                 {
-                    userInterface.WriteLine($"Input must be between {min} and {max}. Please enter a valid decimal number.");
+                    userInterface.WriteLine(localiser.Get(nameof(Strings_InputHandling.PromptDecimal_OutOfBounds), min, max));
                     continue;
                 }
 
@@ -73,13 +91,13 @@ namespace FinancialReportApp.Util
 
                 if (!isParsed)
                 {
-                    userInterface.WriteLine("Invalid input. Please enter a valid decimal number.");
+                    userInterface.WriteLine(localiser.Get(nameof(Strings_InputHandling.PromptDecimal_Invalid)));
                     continue;
                 }
 
                 if(result < min || result > max)
                 {
-                    userInterface.WriteLine($"Input must be between {min} and {max}. Please enter a valid decimal number.");
+                    userInterface.WriteLine(localiser.Get(nameof(Strings_InputHandling.PromptDecimal_OutOfBounds)));
                     continue;
                 }
 
@@ -97,7 +115,7 @@ namespace FinancialReportApp.Util
                 {
                     return input;
                 }
-                userInterface.WriteLine("Input cannot be empty. Please enter a valid string.");
+                userInterface.WriteLine(localiser.Get(nameof(Strings_InputHandling.PromptString_Invalid)));
             }
         }
 
@@ -111,13 +129,13 @@ namespace FinancialReportApp.Util
                 {
                     userInterface.WriteLine($"{i + 1}. {values[i]}");
                 }
-                userInterface.Write("Select an option: ");
+                userInterface.Write(localiser.Get(nameof(Strings_InputHandling.PromptEnum_Option)));
                 string input = userInterface.ReadLine();
                 if (int.TryParse(input, out int choice) && choice >= 1 && choice <= values.Count)
                 {
                     return values[choice - 1];
                 }
-                userInterface.WriteLine("Invalid input. Please select a valid option.");
+                userInterface.WriteLine(localiser.Get(nameof(Strings_InputHandling.PromptEnum_Invalid)));
             }
         }
 
@@ -125,17 +143,17 @@ namespace FinancialReportApp.Util
         {
             while (true)
             {
-                userInterface.Write(message + " (y/n): ");
-                string input = userInterface.ReadLine().Trim().ToLower();
-                if (input == "y" || input == "yes")
+                userInterface.Write(message + localiser.Get(nameof(Strings_InputHandling.PromptYesNo_QuestionSuffix)));
+                string input = userInterface.ReadLine()?.Trim().ToLowerInvariant();
+                if (YesInputs.Contains(input))
                 {
                     return true;
                 }
-                else if (input == "n" || input == "no")
+                else if (NoInputs.Contains(input))
                 {
                     return false;
                 }
-                userInterface.WriteLine("Invalid input. Please enter 'y' or 'n'.");
+                userInterface.WriteLine(localiser.Get(nameof(Strings_InputHandling.PromptYesNo_Invalid)));
             }
         }
     }

@@ -1,4 +1,5 @@
-﻿using FinancialReportApp.UI;
+﻿using FinancialReportApp.Resources;
+using FinancialReportApp.UI;
 using FinancialReportApp.Util;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -16,13 +17,15 @@ namespace FinancialReportApp.Tests.Util
         InputHandler inputHandler;
 
         Mock<IUserInterface> mockUserInterface;
+        Mock<ILocaliser> mockLocaliser;
 
         [TestInitialize]
         public void Setup()
         {
             mockUserInterface = new Mock<IUserInterface>();
+            mockLocaliser = new Mock<ILocaliser>();
 
-            inputHandler = new InputHandler(mockUserInterface.Object);
+            inputHandler = new InputHandler(mockUserInterface.Object, mockLocaliser.Object);
         }
 
         [TestMethod]
@@ -50,12 +53,15 @@ namespace FinancialReportApp.Tests.Util
                 .Returns(invalidInput)
                 .Returns(validInput);
 
+            mockLocaliser.Setup(l => l.Get(nameof(Strings_InputHandling.PromptInt_Invalid)))
+                .Returns("Invalid");
+
             var result = inputHandler.PromptInt("Enter an integer:");
 
             Assert.AreEqual(100, result);
             mockUserInterface.Verify(ui => ui.Write("Enter an integer:"), Times.Exactly(2));
             mockUserInterface.Verify(ui => ui.ReadLine(), Times.Exactly(2));
-            mockUserInterface.Verify(ui => ui.WriteLine("Invalid input. Please enter a valid integer."), Times.Once);
+            mockUserInterface.Verify(ui => ui.WriteLine("Invalid"), Times.Once);
         }
 
         [TestMethod]
@@ -100,12 +106,15 @@ namespace FinancialReportApp.Tests.Util
                 .Returns(outOfRangeInput)
                 .Returns(validInput);
 
+            mockLocaliser.Setup(l => l.Get(nameof(Strings_InputHandling.PromptDecimal_Invalid))).Returns("Invalid");
+            mockLocaliser.Setup(l => l.Get(nameof(Strings_InputHandling.PromptDecimal_OutOfBounds))).Returns("OutOfBounds");
+
             var result = inputHandler.PromptNullableDecimal("Enter a decimal:", 0, 600);
 
             Assert.AreEqual(500m, result);
             mockUserInterface.Verify(ui => ui.Write("Enter a decimal:"), Times.Exactly(3));
             mockUserInterface.Verify(ui => ui.ReadLine(), Times.Exactly(3));
-            mockUserInterface.Verify(ui => ui.WriteLine("Invalid input. Please enter a valid decimal number."), Times.Once);
+            mockUserInterface.Verify(ui => ui.WriteLine("Invalid"), Times.Once);
             mockUserInterface.Verify(ui => ui.WriteLine("Input must be between 0 and 600. Please enter a valid decimal number."), Times.Once);
         }
 
