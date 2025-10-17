@@ -6,6 +6,7 @@ using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Resources;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -53,7 +54,7 @@ namespace FinancialReportApp.Tests.Util
                 .Returns(invalidInput)
                 .Returns(validInput);
 
-            mockLocaliser.Setup(l => l.Get(nameof(Strings_InputHandling.PromptInt_Invalid)))
+            mockLocaliser.Setup(l => l.Get(It.IsAny<ResourceManager>(), nameof(Strings_InputHandling.PromptInt_Invalid)))
                 .Returns("Invalid");
 
             var result = inputHandler.PromptInt("Enter an integer:");
@@ -97,41 +98,59 @@ namespace FinancialReportApp.Tests.Util
         [TestMethod]
         public void PromptNullableDecimal_InvalidThenValidInput_ReturnsParsedDecimal()
         {
+            var inputText = "Enter a decimal:";
+
             var invalidInput = "xyz";
             var outOfRangeInput = "1000";
             var validInput = "500";
+
+            var outOfRangeOutput = "Between {0} and {1}";
+            var invalidOutput = "Invalid";
 
             mockUserInterface.SetupSequence(ui => ui.ReadLine())
                 .Returns(invalidInput)
                 .Returns(outOfRangeInput)
                 .Returns(validInput);
 
-            mockLocaliser.Setup(l => l.Get(nameof(Strings_InputHandling.PromptDecimal_Invalid))).Returns("Invalid");
-            mockLocaliser.Setup(l => l.Get(nameof(Strings_InputHandling.PromptDecimal_OutOfBounds))).Returns("OutOfBounds");
+            mockLocaliser.Setup(l => l.Get(It.IsAny<ResourceManager>(), nameof(Strings_InputHandling.PromptDecimal_Invalid))).Returns(invalidOutput);
+            mockLocaliser.Setup(l => l.Get(It.IsAny<ResourceManager>(), nameof(Strings_InputHandling.PromptDecimal_OutOfBounds), It.IsAny<object[]>()))
+                .Returns((ResourceManager _, string __, object[] args) => string.Format(outOfRangeOutput, args));
 
-            var result = inputHandler.PromptNullableDecimal("Enter a decimal:", 0, 600);
+            var result = inputHandler.PromptNullableDecimal(inputText, 0, 600);
 
             Assert.AreEqual(500m, result);
-            mockUserInterface.Verify(ui => ui.Write("Enter a decimal:"), Times.Exactly(3));
+            mockUserInterface.Verify(ui => ui.Write(inputText), Times.Exactly(3));
             mockUserInterface.Verify(ui => ui.ReadLine(), Times.Exactly(3));
-            mockUserInterface.Verify(ui => ui.WriteLine("Invalid"), Times.Once);
-            mockUserInterface.Verify(ui => ui.WriteLine("Input must be between 0 and 600. Please enter a valid decimal number."), Times.Once);
+            mockUserInterface.Verify(ui => ui.WriteLine(invalidOutput), Times.Once);
+            mockUserInterface.Verify(ui => ui.WriteLine(string.Format(outOfRangeOutput, 0, 600)), Times.Once);
         }
 
         [TestMethod]
         public void PromptNullableDecimal_InputOutsideOfRangeThenInside()
         {
+            var inputText = "Enter a decimal:";
+
+            var outOfRangeOutput = "Between {0} and {1}";
+            var invalidOutput = "Invalid";
+
             mockUserInterface.SetupSequence(ui => ui.ReadLine())
                 .Returns("-1")
                 .Returns("101")
                 .Returns("50");
 
-            var result = inputHandler.PromptNullableDecimal("Enter a decimal:", 0, 100);
+            var result = inputHandler.PromptNullableDecimal(inputText, 0, 100);
+
+            //mockLocaliser.Setup(l => l.Get(It.IsAny<ResourceManager>(), nameof(Strings_InputHandling.PromptDecimal_Invalid))).Returns(invalidOutput);
+            //mockLocaliser.Setup(l => l.Get(It.IsAny<ResourceManager>(), nameof(Strings_InputHandling.PromptDecimal_OutOfBounds), It.IsAny<object[]>()))
+                //.Returns((ResourceManager _, string __, object[] args) => string.Format(outOfRangeOutput, args));
+
+            mockLocaliser.Setup(l => l.Get(It.IsAny<ResourceManager>(), nameof(Strings_InputHandling.PromptDecimal_OutOfBounds), It.IsAny<object[]>()))
+                .Returns((ResourceManager _, string __, object[] args) =>string.Format(outOfRangeOutput, args));
 
             Assert.AreEqual(50m, result);
-            mockUserInterface.Verify(ui => ui.Write("Enter a decimal:"), Times.Exactly(3));
+            mockUserInterface.Verify(ui => ui.Write(inputText), Times.Exactly(3));
             mockUserInterface.Verify(ui => ui.ReadLine(), Times.Exactly(3));
-            mockUserInterface.Verify(ui => ui.WriteLine("Input must be between 0 and 100. Please enter a valid decimal number."), Times.Exactly(2));
+            mockUserInterface.Verify(ui => ui.WriteLine(string.Format(outOfRangeOutput, 0, 100)), Times.Exactly(2));
         }
 
         [TestMethod]
