@@ -31,22 +31,30 @@ namespace FinancialReportApp.Systems
 
         public void ProcessData()
         {
+            reportData = new ReportData();
+
             reportData.Salary = new TimeValue(CalculateAnnualAmount(userData.Salary, userData.SalaryFrequency));
             reportData.Tax = new TimeValue( taxSystem.CalculateTax(reportData.Salary.Annual));
             reportData.TaxCredits = new TimeValue(userData.TaxCredits.Sum());
             reportData.Net = new TimeValue(reportData.Salary.Annual - reportData.Tax.Annual + reportData.TaxCredits.Annual);
 
+            var expensesByCategory = new Dictionary<string, TimeValue>();
             foreach (var expense in userData.Expenses)
             {
                 decimal annualExpense = CalculateAnnualAmount(expense.Amount, expense.Frequency);
 
-                if (!reportData.Expenses.TryGetValue(expense.Category, out var value))
+                if (!expensesByCategory.TryGetValue(expense.Category, out var value))
                 {
                     value = new TimeValue(0);
                 }
                 value.AddAnnual(annualExpense);
                 value.ComputeMonthlyWeekly();
-                reportData.Expenses[expense.Category] = value;
+                expensesByCategory[expense.Category] = value;
+            }
+
+            foreach (var kvp in expensesByCategory)
+            {
+                reportData.Expenses[kvp.Key] = kvp.Value;
             }
 
             reportData.TotalExpenses = new TimeValue(0);

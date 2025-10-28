@@ -150,5 +150,55 @@ namespace FinancialReportApp.Tests.Systems
             Assert.IsTrue(report.Contains("Total Weekly expenses: £0.00"));
 
         }
+
+        [TestMethod]
+        public void ProcessData_RebuildsStateOnRepeatedExecution()
+        {
+            decimal salary = 60000m;
+            var expenses = new List<Expense>
+            {
+                new Expense("Rent", 1000m, TimeFrequency.Monthly),
+                new Expense("Gym", 50m, TimeFrequency.Monthly)
+            };
+            var taxCredits = new List<decimal> { 1000m };
+
+            mockUserData.SetupGet(u => u.Salary).Returns(() => salary);
+            mockUserData.SetupGet(u => u.IsSalaryBeforeTax).Returns(true);
+            mockUserData.SetupGet(u => u.SalaryFrequency).Returns(TimeFrequency.Yearly);
+            mockUserData.SetupGet(u => u.Expenses).Returns(() => expenses.AsReadOnly());
+            mockUserData.SetupGet(u => u.TaxCredits).Returns(() => taxCredits.AsReadOnly());
+
+            mockTaxSystem.Setup(t => t.CalculateTax(It.IsAny<decimal>())).Returns<decimal>(amount => amount * 0.2m);
+
+            var reportGenerator = new ReportGenerator(mockUserData.Object, mockTaxSystem.Object);
+
+            reportGenerator.ProcessData();
+            var firstReport = reportGenerator.ReportData;
+
+            CollectionAssert.AreEquivalent(new[] { "Rent", "Gym" }, firstReport.Expenses.Keys.ToList());
+            Assert.AreEqual(60000m, firstReport.Salary.Annual);
+            Assert.AreEqual(12600m, firstReport.TotalExpenses.Annual);
+            Assert.AreEqual(12000m, firstReport.Tax.Annual);
+            Assert.AreEqual(1000m, firstReport.TaxCredits.Annual);
+
+            salary = 40000m;
+            expenses = new List<Expense>
+            {
+                new Expense("Rent", 1000m, TimeFrequency.Monthly),
+                new Expense("Utilities", 150m, TimeFrequency.Monthly)
+            };
+            taxCredits = new List<decimal> { 500m };
+
+            reportGenerator.ProcessData();
+            var secondReport = reportGenerator.ReportData;
+
+            CollectionAssert.AreEquivalent(new[] { "Rent", "Utilities" }, secondReport.Expenses.Keys.ToList());
+            Assert.AreEqual(40000m, secondReport.Salary.Annual);
+            Assert.AreEqual(13800m, secondReport.TotalExpenses.Annual);
+            Assert.AreEqual(8000m, secondReport.Tax.Annual);
+            Assert.AreEqual(500m, secondReport.TaxCredits.Annual);
+
+            mockTaxSystem.Verify(t => t.CalculateTax(It.IsAny<decimal>()), Times.Exactly(2));
+        }
     }
 }
