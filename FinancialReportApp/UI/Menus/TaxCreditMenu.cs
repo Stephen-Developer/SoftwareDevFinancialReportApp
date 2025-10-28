@@ -1,4 +1,5 @@
-﻿using FinancialReportApp.Systems;
+﻿using FinancialReportApp.Resources;
+using FinancialReportApp.Systems;
 using FinancialReportApp.Util;
 using System;
 using System.Collections.Generic;
@@ -8,14 +9,16 @@ using System.Threading.Tasks;
 
 namespace FinancialReportApp.UI.Menus
 {
-    [Menu("Input tax credits", typeof(InputSalaryMenu))]
+    [Menu(nameof(Strings.TaxCreditMenu_Menu), typeof(InputSalaryMenu))]
     internal class TaxCreditMenu : Menu
     {
-        private const string startText = "Tax Credit Menu - Please select an option:";
-        private const string endText = "Option: ";
-        private const string errorText = "Invalid option number.";
-
-        public TaxCreditMenu(IUserInterface userInterface, IUIRegistry registry) : base(userInterface, startText, endText, errorText)
+        public TaxCreditMenu(IUserInterface userInterface, ILocaliser localiser, IUIRegistry registry) 
+            : base(
+                  userInterface,
+                  localiser, 
+                  localiser.Get(nameof(Strings.TaxCreditMenu_Message_Start)),
+                  null, 
+                  null)
         {
             
         }

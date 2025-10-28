@@ -1,4 +1,5 @@
-﻿using FinancialReportApp.Systems;
+﻿using FinancialReportApp.Resources;
+using FinancialReportApp.Systems;
 using FinancialReportApp.Util;
 using Microsoft.Win32;
 using System;
@@ -9,17 +10,19 @@ using System.Threading.Tasks;
 
 namespace FinancialReportApp.UI.Menus
 {
-    [Menu("Main menu")]
+    [Menu(nameof(Strings.MainMenu_Menu))]
     internal class MainMenu : Menu
     {
-        private const string startText = "Please select an option:";
-        private const string endText = "Option: ";
-        private const string errorText = "Invalid option number.";
-
 #if DEBUG
         private readonly IUserData userData;
 
-        public MainMenu(IUserInterface userInterface, IUIRegistry registry, IUserData userData) : base(userInterface, startText, endText, errorText)
+        public MainMenu(IUserInterface userInterface, ILocaliser localiser, IUIRegistry registry, IUserData userData)
+            : base(
+                  userInterface, 
+                  localiser, 
+                  null, 
+                  null, 
+                  null)
         {
             this.userData = userData;
             int maxOrder = registry.GetMaxOrderForParent<MainMenu>();
@@ -48,7 +51,8 @@ namespace FinancialReportApp.UI.Menus
             userData.AddTaxBracket(61, null, 0.5m);
         }
 #else
-        public MainMenu(IUserInterface userInterface, IUIRegistry registry) : base(userInterface, startText, endText, errorText)
+        public MainMenu(IUserInterface userInterface, IUIRegistry registry, ILocaliser localiser) 
+            : base(userInterface, localiser, null, null, null)
         {
             
         }

@@ -1,4 +1,5 @@
-﻿using FinancialReportApp.Systems;
+﻿using FinancialReportApp.Resources;
+using FinancialReportApp.Systems;
 using FinancialReportApp.UI.Menus;
 using FinancialReportApp.Util;
 using System;
@@ -9,13 +10,13 @@ using System.Threading.Tasks;
 
 namespace FinancialReportApp.UI.UIs
 {
-    [Menu("Remove Tax Credit", typeof(TaxCreditMenu))]
+    [Menu(nameof(Strings.RemoveTaxCreditUI_Menu), typeof(TaxCreditMenu))]
     internal class RemoveTaxCreditUI : UIBase
     {
         private readonly IInputHandler inputHandler;
         private readonly IUserData userData;
 
-        public RemoveTaxCreditUI(IUserInterface userInterface, IInputHandler inputHandler, IUserData userData) : base(userInterface)
+        public RemoveTaxCreditUI(IUserInterface userInterface, ILocaliser localiser, IInputHandler inputHandler, IUserData userData) : base(userInterface, localiser)
         {
             this.inputHandler = inputHandler;
             this.userData = userData;
@@ -23,28 +24,56 @@ namespace FinancialReportApp.UI.UIs
 
         public override void Display()
         {
-            var credits = userData.TaxCredits;
-            if (credits.Count == 0)
+            if (userData.TaxCredits.Count == 0)
             {
-                userInterface.WriteLine("No credits to remove.");
-                userInterface.WaitForKey();
+                NoCreditMessage();
                 return;
             }
-            userInterface.WriteLine("Current credits:");
-            for (int i = 0; i < credits.Count; i++)
+
+            DisplayCurrentCredits();
+
+            int index = PromptGetIndexToRemove();
+
+            RemoveIndex(index);
+        }
+
+        private void NoCreditMessage()
+        {
+            var message = localiser.Get(nameof(Strings.RemoveTaxCreditUI_Message_Nothing));
+            userInterface.WriteLine(message);
+            userInterface.WaitForKey();
+        }
+
+        private void DisplayCurrentCredits()
+        {
+            var message = localiser.Get(nameof(Strings.RemoveTaxCreditUI_Message_Current));
+            userInterface.WriteLine(message);
+
+            for(int i = 0; i < userData.TaxCredits.Count; i++)
             {
-                var exp = credits[i];
+                var exp = userData.TaxCredits[i];
                 userInterface.WriteLine($"{i + 1}. {exp}");
             }
-            int index = inputHandler.PromptInt("Enter the number of the credits to remove: ") - 1;
-            if (index >= 0 && index < credits.Count)
+        }
+
+        private int PromptGetIndexToRemove()
+        {
+            var message = localiser.Get(nameof(Strings.RemoveTaxCreditUI_Prompt_Number));
+            return inputHandler.PromptInt(message) - 1;
+        }
+
+        private void RemoveIndex(int index)
+        {
+            if (index >= 0 && index < userData.TaxCredits.Count)
             {
                 userData.RemoveTaxCredit(index);
-                userInterface.WriteLine("Expense removed.");
+                var message = localiser.Get(nameof(Strings.RemoveTaxCreditUI_Message_Removed));
+                userInterface.WriteLine(message);
             }
             else
             {
-                userInterface.WriteLine("Invalid index.");
+                var message = localiser.Get(nameof(Strings.RemoveTaxCreditUI_Message_Invalid));
+                userInterface.WriteLine(message);
             }
             userInterface.WaitForKey();
         }

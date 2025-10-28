@@ -1,4 +1,5 @@
-﻿using FinancialReportApp.UI;
+﻿using FinancialReportApp.Resources;
+using FinancialReportApp.UI;
 using FinancialReportApp.UI.UIs;
 using FinancialReportApp.Util;
 using Moq;
@@ -13,11 +14,16 @@ namespace FinancialReportApp.Tests.UI.UIs
     [TestClass]
     public class ClearTaxCreditsUITests
     {
+        const string promptValue = "Prompt";
+        const string clearValue = "Clear";
+        const string cancelValue = "Cancel";
+
         ClearTaxCreditsUI ui;
 
         Mock<IUserInterface> userInterface;
         Mock<IInputHandler> inputHandler;
         Mock<IUserData> userData;
+        Mock<ILocaliser> localiser;
 
         [TestInitialize]
         public void Setup()
@@ -25,20 +31,25 @@ namespace FinancialReportApp.Tests.UI.UIs
             userInterface = new Mock<IUserInterface>();
             inputHandler = new Mock<IInputHandler>();
             userData = new Mock<IUserData>();
+            localiser = new Mock<ILocaliser>();
 
-            ui = new ClearTaxCreditsUI(userInterface.Object, inputHandler.Object, userData.Object);
+            ui = new ClearTaxCreditsUI(userInterface.Object, inputHandler.Object, userData.Object, localiser.Object);
         }
 
         [TestMethod]
         public void ClearTaxCreditsUTest()
         {
             inputHandler.Setup(i => i.PromptYesNo(It.IsAny<string>())).Returns(true);
+            localiser.Setup(l => l.Get(nameof(Strings.ClearTaxCreditsUI_Prompt))).Returns(promptValue);
+            localiser.Setup(l => l.Get(nameof(Strings.ClearTaxCreditsUI_Message_Cleared))).Returns(clearValue);
 
             ui.Display();
 
-            inputHandler.Verify(i => i.PromptYesNo("Are you sure you want to clear all tax credits?"), Times.Once);
+            localiser.Verify(l => l.Get(nameof(Strings.ClearTaxCreditsUI_Prompt)), Times.Once);
+            inputHandler.Verify(i => i.PromptYesNo(promptValue), Times.Once);
             userData.Verify(u => u.ClearTaxCredits(), Times.Once);
-            userInterface.Verify(u => u.WriteLine("All tax credits cleared."), Times.Once);
+            localiser.Verify(l => l.Get(nameof(Strings.ClearTaxCreditsUI_Message_Cleared)), Times.Once);
+            userInterface.Verify(u => u.WriteLine(clearValue), Times.Once);
             userInterface.Verify(u => u.WaitForKey(), Times.Once);
         }
 
@@ -46,12 +57,16 @@ namespace FinancialReportApp.Tests.UI.UIs
         public void DeclineClearTaxCreditsUTest()
         {
             inputHandler.Setup(i => i.PromptYesNo(It.IsAny<string>())).Returns(false);
+            localiser.Setup(l => l.Get(nameof(Strings.ClearTaxCreditsUI_Prompt))).Returns(promptValue);
+            localiser.Setup(l => l.Get(nameof(Strings.ClearTaxCreditsUI_Message_Cancelled))).Returns(cancelValue);
 
             ui.Display();
 
-            inputHandler.Verify(i => i.PromptYesNo("Are you sure you want to clear all tax credits?"), Times.Once);
+            localiser.Verify(l => l.Get(nameof(Strings.ClearTaxCreditsUI_Prompt)), Times.Once);
+            inputHandler.Verify(i => i.PromptYesNo(promptValue), Times.Once);
             userData.Verify(u => u.ClearTaxCredits(), Times.Never);
-            userInterface.Verify(u => u.WriteLine("Tax credits not cleared."), Times.Once);
+            localiser.Verify(l => l.Get(nameof(Strings.ClearTaxCreditsUI_Message_Cancelled)), Times.Once);
+            userInterface.Verify(u => u.WriteLine(cancelValue), Times.Once);
             userInterface.Verify(u => u.WaitForKey(), Times.Once);
         }
     }

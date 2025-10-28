@@ -1,4 +1,5 @@
-﻿using FinancialReportApp.Systems;
+﻿using FinancialReportApp.Resources;
+using FinancialReportApp.Systems;
 using FinancialReportApp.UI.Menus;
 using FinancialReportApp.Util;
 using System;
@@ -9,13 +10,13 @@ using System.Threading.Tasks;
 
 namespace FinancialReportApp.UI.UIs
 {
-    [Menu("Input expense item", typeof(InputExpensesMenu))]
+    [Menu(nameof(Strings.InputExpenseItem_Menu), typeof(InputExpensesMenu))]
     internal class InputExpenseItemUI : UIBase
     {
         private readonly IInputHandler inputHandler;
         private readonly IUserData userData;
 
-        public InputExpenseItemUI(IUserInterface userInterface, IInputHandler inputHandler, IUserData userData) : base(userInterface)
+        public InputExpenseItemUI(IUserInterface userInterface, ILocaliser localiser, IInputHandler inputHandler, IUserData userData) : base(userInterface, localiser)
         {
             this.inputHandler = inputHandler;
             this.userData = userData;
@@ -23,11 +24,29 @@ namespace FinancialReportApp.UI.UIs
 
         public override void Display()
         {
-            string catagory = inputHandler.PromptString("Enter expense category: ");
-            decimal amount = inputHandler.PromptDecimal("Enter expense amount: ");
-            TimeFrequency frequency = inputHandler.PromptEnum<TimeFrequency>("Enter expense frequency (e.g., Monthly, Weekly): ");
+            var catagory = GetCatagory();
+            var amount = GetAmount();
+            var frequency = GetTimeFrequency();
 
             userData.AddExpense(catagory, amount, frequency);
+        }
+
+        private string GetCatagory()
+        {
+            var message = localiser.Get(nameof(Strings.InputExpenseItem_Prompt_Category));
+            return inputHandler.PromptString(message);
+        }
+
+        private decimal GetAmount()
+        {
+            var message = localiser.Get(nameof(Strings.InputExpenseItem_Prompt_Amount));
+            return inputHandler.PromptDecimal(message);
+        }
+
+        private TimeFrequency GetTimeFrequency()
+        {
+            var message = localiser.Get(nameof(Strings.InputExpenseItem_Prompt_Frequency));
+            return inputHandler.PromptEnum<TimeFrequency>(message);
         }
     }
 }

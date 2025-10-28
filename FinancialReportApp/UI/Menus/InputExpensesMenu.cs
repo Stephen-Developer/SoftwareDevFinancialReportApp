@@ -1,4 +1,5 @@
-﻿using FinancialReportApp.Systems;
+﻿using FinancialReportApp.Resources;
+using FinancialReportApp.Systems;
 using FinancialReportApp.Util;
 using System;
 using System.Collections.Generic;
@@ -8,14 +9,16 @@ using System.Threading.Tasks;
 
 namespace FinancialReportApp.UI.Menus
 {
-    [Menu("Input expenses", typeof(MainMenu))]
+    [Menu(nameof(Strings.InputExpensesMenu_Menu), typeof(MainMenu))]
     internal class InputExpensesMenu : Menu
     {
-        private const string startText = "Input Expenses Menu - Please select an option:";
-        private const string endText = "Option: ";
-        private const string errorText = "Invalid option number.";
-
-        public InputExpensesMenu(IUserInterface userInterface, IUIRegistry registry) : base(userInterface, startText, endText, errorText)
+        public InputExpensesMenu(IUserInterface userInterface, ILocaliser localiser, IUIRegistry registry) 
+            : base(
+                  userInterface, 
+                  localiser, 
+                  localiser.Get(nameof(Strings.InputExpensesMenu_Message_Start)), 
+                  null, 
+                  null)
         {
             
         }

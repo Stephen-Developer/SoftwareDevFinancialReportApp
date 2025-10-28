@@ -1,4 +1,5 @@
-﻿using FinancialReportApp.Systems;
+﻿using FinancialReportApp.Resources;
+using FinancialReportApp.Systems;
 using FinancialReportApp.Util;
 using System;
 using System.Collections.Generic;
@@ -8,30 +9,42 @@ using System.Threading.Tasks;
 
 namespace FinancialReportApp.UI.UIs
 {
-    [Menu("View all expenses", typeof(Menus.InputExpensesMenu))]
+    [Menu(nameof(Strings.ViewExpensesUI_Menu), typeof(Menus.InputExpensesMenu))]
     internal class ViewExpensesUI : UIBase
     {
         private readonly IUserData userData;
 
-        public ViewExpensesUI(IUserInterface userInterface, IUserData userData) : base(userInterface)
+        public ViewExpensesUI(IUserInterface userInterface, ILocaliser localiser, IUserData userData) : base(userInterface, localiser)
         {
             this.userData = userData;
         }
 
         public override void Display()
         {
-            var expenses = userData.Expenses;
-            if (expenses.Count == 0)
+            if (userData.Expenses.Count == 0)
             {
-                userInterface.WriteLine("No expenses recorded.");
+                NoExpensesMessage();
+                return;
             }
-            else
+
+            ShowCurrentExpenses();
+        }
+
+        private void NoExpensesMessage()
+        {
+            var message = localiser.Get(nameof(Strings.ViewExpensesUI_Message_Empty));
+            userInterface.WriteLine(message);
+            userInterface.WaitForKey();
+        }
+
+        private void ShowCurrentExpenses()
+        {
+            var message = localiser.Get(nameof(Strings.ViewExpensesUI_Message_Current));
+            userInterface.WriteLine(message);
+            foreach (var exp in userData.Expenses)
             {
-                userInterface.WriteLine("Current Expenses:");
-                foreach (var exp in expenses)
-                {
-                    userInterface.WriteLine($"{exp.Category} - {exp.Amount} ({exp.Frequency})");
-                }
+                var expenseMessage = localiser.Get(nameof(Strings.ViewExpensesUI_Message_Expense), exp.Category, exp.Amount, exp.Frequency);
+                userInterface.WriteLine(expenseMessage);
             }
             userInterface.WaitForKey();
         }
