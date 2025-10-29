@@ -112,7 +112,11 @@ namespace FinancialReportApp.Util
                         // Avoid duplicate Back entries (in case you call BuildMenuHierarchy multiple times)
                         if (!menuContainsAction(menu, BACK))
                         {
-                            menu.AddMenuAction(BACK, () => flowController.NavigateBack());
+                            menu.AddMenuAction(BACK, () =>
+                            {
+                                menu.Exit();
+                                flowController.NavigateBack();
+                            });
                         }
                     }
                 }

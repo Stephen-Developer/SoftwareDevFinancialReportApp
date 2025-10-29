@@ -29,8 +29,18 @@ namespace FinancialReportApp.Util
         {
             var next = (IDisplayableUI)provider.GetRequiredService(uiType);
             history.Push(next);
-            next.Display();
-            history.Pop();
+
+            try
+            {
+                next.Display();
+            }
+            finally
+            {
+                if (history.Count > 0 && ReferenceEquals(history.Peek(), next))
+                {
+                    history.Pop();
+                }
+            }
         }
 
         public void NavigateBack()
@@ -38,8 +48,6 @@ namespace FinancialReportApp.Util
             if (history.Count > 1)
             {
                 history.Pop();
-                var previous = history.Peek();
-                previous.Display();
             }
         }
 
